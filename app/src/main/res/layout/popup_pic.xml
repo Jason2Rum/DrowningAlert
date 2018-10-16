@@ -1,0 +1,57 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/layout_pic_popup"
+    android:background="@color/oldlace">
+
+    <LinearLayout
+        android:background="@color/whitesmoke"
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        android:layout_height="130dp"
+        android:orientation="vertical" >
+
+        <Button
+            android:id="@+id/btn_take_photo"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:textColor="@color/whitesmoke"
+            android:background="@drawable/btn_blue_selector"
+            android:gravity="center"
+            android:text="拍照"
+            android:textSize="14sp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="2dp" />
+
+        <Button
+            android:id="@+id/btn_select_photo"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:textColor="@color/whitesmoke"
+            android:background="@drawable/btn_blue_selector"
+            android:gravity="center"
+            android:text="从相册选择"
+            android:textSize="14sp" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="2dp"/>
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="6dp" />
+
+        <Button
+            android:id="@+id/btn_cancel"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="@drawable/btn_blue_selector"
+            android:gravity="center"
+            android:textColor="@color/whitesmoke"
+            android:text="取消"
+            android:textSize="14sp" />
+    </LinearLayout>
+
+</RelativeLayout>
