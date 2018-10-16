@@ -10,6 +10,7 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import code.art.drowningalert.Utils.SharedPreferencesUtil;
@@ -24,6 +25,7 @@ public class LoginActivity extends AppCompatActivity
     private CheckBox checkBox_password;
     private CheckBox checkBox_login;
     private ImageView iv_see_password;
+    private TextView tv_sign_up;
 
     private LoadingDialog mLoadingDialog; //显示正在加载的对话框
 
@@ -129,6 +131,7 @@ public class LoginActivity extends AppCompatActivity
         checkBox_password = (CheckBox) findViewById(R.id.checkBox_pwd);
         checkBox_login = (CheckBox) findViewById(R.id.checkBox_auto_login);
         iv_see_password = (ImageView) findViewById(R.id.hide_pwd_image);
+        tv_sign_up = findViewById(R.id.sign_up_entrance);
     }
 
     private void setupEvents() {
@@ -136,6 +139,7 @@ public class LoginActivity extends AppCompatActivity
         checkBox_password.setOnCheckedChangeListener(this);
         checkBox_login.setOnCheckedChangeListener(this);
         iv_see_password.setOnClickListener(this);
+        tv_sign_up.setOnClickListener(this);
 
     }
 
@@ -168,7 +172,9 @@ public class LoginActivity extends AppCompatActivity
             case R.id.hide_pwd_image:
                 setPasswordVisibility();    //改变图片并设置输入框的文本可见或不可见
                 break;
-
+            case R.id.sign_up_entrance:
+                startActivity(new Intent(LoginActivity.this,SignUpActivity.class));
+                break;
         }
     }
 
