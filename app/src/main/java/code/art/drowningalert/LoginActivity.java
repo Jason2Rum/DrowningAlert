@@ -29,7 +29,17 @@ public class LoginActivity extends AppCompatActivity
 
     private LoadingDialog mLoadingDialog; //显示正在加载的对话框
 
+    public void showToast(final String msg) {
 
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                et_name.setText("hh");
+                Toast.makeText(LoginActivity.this, msg, Toast.LENGTH_SHORT).show();
+            }
+        });
+
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -125,7 +135,7 @@ public class LoginActivity extends AppCompatActivity
 
 
     private void initViews() {
-        mLoginBtn = (Button) findViewById(R.id.login_button);
+        mLoginBtn = (Button) findViewById(R.id.bt_sign_up);
         et_name = (EditText) findViewById(R.id.text_account);
         et_password = (EditText) findViewById(R.id.text_pwd);
         checkBox_password = (CheckBox) findViewById(R.id.checkBox_pwd);
@@ -165,7 +175,7 @@ public class LoginActivity extends AppCompatActivity
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.login_button:
+            case R.id.bt_sign_up:
                 loadUserName();    //无论如何保存一下用户名
                 login(); //登陆
                 break;
@@ -398,14 +408,6 @@ public class LoginActivity extends AppCompatActivity
     }
 
 
-    public void showToast(final String msg) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                Toast.makeText(LoginActivity.this, msg, Toast.LENGTH_SHORT).show();
-            }
-        });
 
-    }
 
 }

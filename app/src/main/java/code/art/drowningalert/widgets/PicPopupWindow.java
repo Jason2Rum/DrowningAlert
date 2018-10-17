@@ -1,13 +1,17 @@
 package code.art.drowningalert.widgets;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.PopupWindow;
 import android.view.View;
+
+import java.io.File;
 
 import code.art.drowningalert.R;
 import code.art.drowningalert.Utils.DensityUtil;
@@ -18,15 +22,15 @@ public class PicPopupWindow extends PopupWindow implements View.OnClickListener 
     private Button cancelBtn;
 
     private View mPopWindow;
-    private String picPath;
+
     private Context mContext;
     private OnItemClickListener mListener;
 
 
 
-    public PicPopupWindow(Context context,String picPath){
+    public PicPopupWindow(Context context){
         super(context);
-        this.picPath=picPath;
+
         this.mContext = context;
         init(context);
         setPopupWindow();
@@ -64,7 +68,7 @@ public class PicPopupWindow extends PopupWindow implements View.OnClickListener 
         });
     }
     public interface OnItemClickListener{
-        void setOnItemClick(View view,String path);
+        void setOnItemClick(View view);
     }
     public void setOnItemClickListener(OnItemClickListener listener){
         this.mListener = listener;
@@ -72,8 +76,10 @@ public class PicPopupWindow extends PopupWindow implements View.OnClickListener 
     @Override
     public void onClick(View v){
         if(mListener!=null){
-            mListener.setOnItemClick(v,picPath);
+            mListener.setOnItemClick(v);
         }
     }
+
+
 
 }
