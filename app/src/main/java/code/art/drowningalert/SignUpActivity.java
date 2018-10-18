@@ -145,14 +145,14 @@ public class SignUpActivity extends AppCompatActivity implements PicPopupWindow.
                 if(resultCode == RESULT_OK){
                     String path = this.getExternalCacheDir().getPath();
                     String name = cameraOutputImage;
-                    startActivityForResult(cutForCamera(path ,name), CROP_PHOTO);
+                    startActivityForResult(cutPhoto(null,path ,name,TAKE_PHOTO), CROP_PHOTO);
 
                 }
                 break;
             case CHOOSE_PHOTO:
                 if(resultCode==RESULT_OK){
 
-                    startActivityForResult(cutForPhoto(data.getData()), CROP_PHOTO);
+                    startActivityForResult(cutPhoto(data.getData(),null,null,CHOOSE_PHOTO), CROP_PHOTO);
                 }
                 break;
             case CROP_PHOTO:
@@ -193,6 +193,60 @@ public class SignUpActivity extends AppCompatActivity implements PicPopupWindow.
             cursor.close();
         }
         return path;
+    }
+
+
+
+
+    private Intent cutPhoto(Uri oriImageUri,String cameraPath,String imageName,int flag){
+        try{
+            Intent intent = new Intent("com.android.camera.action.CROP");
+            Uri outputImageUri;
+            File cutFile = new File(getExternalCacheDir(),cutOutPutImage);
+            if(cutFile.exists()){
+                cutFile.delete();
+            }
+            cutFile.createNewFile();
+            if(flag==CHOOSE_PHOTO){
+                if(Build.VERSION.SDK_INT>=24){
+                    outputImageUri = FileProvider.getUriForFile(SignUpActivity.this,fileProvider,cutFile);
+                }else{
+                    outputImageUri = Uri.fromFile(cutFile);//如果不做判断只调用这一句的话会提示“无法引用经过裁剪的图片”
+                }
+            }else {
+                File filePhotoTaken = new File(cameraPath,imageName);
+                if (Build.VERSION.SDK_INT >= 24) {
+                    intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                    oriImageUri = FileProvider.getUriForFile(this,
+                            fileProvider,
+                            filePhotoTaken);
+                } else {
+                    oriImageUri = Uri.fromFile(filePhotoTaken);
+                }
+                outputImageUri = Uri.fromFile(cutFile);
+            }
+
+            intent.putExtra("crop",true);
+            intent.putExtra("aspectX",1);
+            intent.putExtra("aspectY",1);
+            intent.putExtra("outputX",DensityUtil.dip2px(this,96));
+            intent.putExtra("outputY",DensityUtil.dip2px(this,96));
+            intent.putExtra("scale",true);
+            intent.putExtra("return-data",false);
+            if(oriImageUri!=null){
+                intent.setDataAndType(oriImageUri,"image/*");
+            }if(outputImageUri!=null){
+                intent.putExtra(MediaStore.EXTRA_OUTPUT,outputImageUri);
+                imageUri = outputImageUri;//更改成员变量imageUri，也就是将其指向裁剪后的图片，在onActivityResult的CROP_PHOTE分支中要用到
+            }
+
+            intent.putExtra("noFaceDetection",true);
+            intent.putExtra("outputFormat",Bitmap.CompressFormat.JPEG.toString());
+            return intent;
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return null;
     }
 
     @NonNull
