@@ -40,6 +40,7 @@ public class SignUpActivity extends AppCompatActivity implements PicPopupWindow.
     public static final int CHOOSE_PHOTO=2;
     public static final int CROP_PHOTO =3;
     private final String cameraOutputImage="output_image.jpg";
+    private final String cutOutPutImage = "cutProfilePic.jpg";
     private final String fileProvider="code.art.drowningalert.fileprovider";
     private PicPopupWindow mPop;
     private CircleImageView userProfile;
@@ -198,12 +199,12 @@ public class SignUpActivity extends AppCompatActivity implements PicPopupWindow.
     private Intent cutForPhoto(Uri oriImageUri){
         try{
             Intent intent = new Intent("com.android.camera.action.CROP");
-            File cutFile = new File(getExternalCacheDir(),"cutProfilePic");
+            File cutFile = new File(getExternalCacheDir(),cutOutPutImage);
             if(cutFile.exists()){
                 cutFile.delete();
-            }else{
-                cutFile.createNewFile();
             }
+            cutFile.createNewFile();
+
             Uri outputImageUri;
             if(Build.VERSION.SDK_INT>=24){
                 outputImageUri = FileProvider.getUriForFile(SignUpActivity.this,fileProvider,cutFile);
@@ -237,30 +238,29 @@ public class SignUpActivity extends AppCompatActivity implements PicPopupWindow.
     private Intent cutForCamera(String cameraPath,String imageName) {
         try {
 
+            Intent intent = new Intent("com.android.camera.action.CROP");
             //设置裁剪之后的图片路径文件
-            File cutfile = new File(Environment.getExternalStorageDirectory().getPath(),
-                    "cutcamera.jpg"); //随便命名一个
+            File cutfile = new File(getExternalCacheDir(),cutOutPutImage); //随便命名一个
             if (cutfile.exists()){ //如果已经存在，则先删除,这里应该是上传到服务器，然后再删除本地的，没服务器，只能这样了
                 cutfile.delete();
             }
             cutfile.createNewFile();
             //初始化 uri
-            Uri filePhotoTakenUri; //返回来的 uri
+            Uri oriImageUri; //拍照得到的图片的uri
             Uri outputImageUri ; //真实的 uri
-            Intent intent = new Intent("com.android.camera.action.CROP");
             //拍照留下的图片
             File filePhotoTaken = new File(cameraPath,imageName);
             if (Build.VERSION.SDK_INT >= 24) {
                 intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                filePhotoTakenUri = FileProvider.getUriForFile(this,
+                oriImageUri = FileProvider.getUriForFile(this,
                         fileProvider,
                         filePhotoTaken);
             } else {
-                filePhotoTakenUri = Uri.fromFile(filePhotoTaken);
+                oriImageUri = Uri.fromFile(filePhotoTaken);
             }
             outputImageUri = Uri.fromFile(cutfile);
             //把这个 uri 提供出去，就可以解析成 bitmap了
-            imageUri = outputImageUri;
+
             // crop为true是设置在开启的intent中设置显示的view可以剪裁
             intent.putExtra("crop",true);
             // aspectX,aspectY 是宽高的比例，这里设置正方形
@@ -272,10 +272,11 @@ public class SignUpActivity extends AppCompatActivity implements PicPopupWindow.
             intent.putExtra("scale",true);
             //如果图片过大，会导致oom，这里设置为false
             intent.putExtra("return-data",false);
-            if (filePhotoTakenUri != null) {
-                intent.setDataAndType(filePhotoTakenUri, "image/*");
+            if (oriImageUri != null) {
+                intent.setDataAndType(oriImageUri, "image/*");
             }
             if (outputImageUri != null) {
+                imageUri = outputImageUri;
                 intent.putExtra(MediaStore.EXTRA_OUTPUT, outputImageUri);
             }
             intent.putExtra("noFaceDetection", true);
