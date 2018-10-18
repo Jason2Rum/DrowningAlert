@@ -2,7 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="code.art.drowningalert">
 
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -11,17 +12,19 @@
         android:supportsRtl="true"
         android:theme="@style/NoBar">
 
-        <!-- android:names属性指定了这个内容提供器的类名
+        <!--
+        android:names属性指定了这个内容提供器的类名
         android:exported="false" 用来限制其他应用访问你的这个provider，只能为false
-        grantUriPermissions表示提供临时读写权限-->
+        grantUriPermissions表示提供临时读写权限
+        -->
         <provider
-            android:authorities="code.art.drowningalert.fileprovider"
             android:name="android.support.v4.content.FileProvider"
+            android:authorities="code.art.drowningalert.fileprovider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/file_paths"/>
+                android:resource="@xml/file_paths" />
         </provider>
 
         <activity android:name=".LoginActivity">
@@ -32,7 +35,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".MainActivity" />
-        <activity android:name=".SignUpActivity"></activity>
+        <activity android:name=".SignUpActivity" />
+        <activity android:name=".ForgetPwdActivity"></activity>
     </application>
 
 </manifest>

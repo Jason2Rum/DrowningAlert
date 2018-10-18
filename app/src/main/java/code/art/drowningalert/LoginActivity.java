@@ -19,13 +19,14 @@ import code.art.drowningalert.widgets.LoadingDialog;
 public class LoginActivity extends AppCompatActivity
         implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
     //布局内的控件
-    private EditText et_name;
-    private EditText et_password;
-    private Button mLoginBtn;
-    private CheckBox checkBox_password;
-    private CheckBox checkBox_login;
-    private ImageView iv_see_password;
-    private TextView tv_sign_up;
+    private EditText accountText;
+    private EditText passwordText;
+    private Button loginButton;
+    private CheckBox passwordCheckBox;
+    private CheckBox loginCheckBox;
+    private ImageView seePasswordImage;
+    private TextView signUpText;
+    private TextView forgetPwdText;
 
     private LoadingDialog mLoadingDialog; //显示正在加载的对话框
 
@@ -34,7 +35,7 @@ public class LoginActivity extends AppCompatActivity
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                et_name.setText("hh");
+                accountText.setText("hh");
                 Toast.makeText(LoginActivity.this, msg, Toast.LENGTH_SHORT).show();
             }
         });
@@ -55,12 +56,12 @@ public class LoginActivity extends AppCompatActivity
 
         //判断用户第一次登陆
         if (firstLogin()) {
-            checkBox_password.setChecked(false);//取消记住密码的复选框
-            checkBox_login.setChecked(false);//取消自动登录的复选框
+            passwordCheckBox.setChecked(false);//取消记住密码的复选框
+            loginCheckBox.setChecked(false);//取消自动登录的复选框
         }
         //判断是否记住密码
         if (remenberPassword()) {
-            checkBox_password.setChecked(true);//勾选记住密码
+            passwordCheckBox.setChecked(true);//勾选记住密码
             setTextNameAndPassword();//把密码和账号输入到输入框中
         } else {
             setTextName();//把用户账号放到输入账号的输入框中
@@ -68,7 +69,7 @@ public class LoginActivity extends AppCompatActivity
 
         //判断是否自动登录
         if (autoLogin()) {
-            checkBox_login.setChecked(true);
+            loginCheckBox.setChecked(true);
             login();//去登录就可以
 
         }
@@ -78,15 +79,15 @@ public class LoginActivity extends AppCompatActivity
      * 把本地保存的数据设置数据到输入框中
      */
     public void setTextNameAndPassword() {
-        et_name.setText("" + getLocalName());
-        et_password.setText("" + getLocalPassword());
+        accountText.setText("" + getLocalName());
+        passwordText.setText("" + getLocalPassword());
     }
 
     /**
      * 设置数据到输入框中
      */
     public void setTextName() {
-        et_name.setText("" + getLocalName());
+        accountText.setText("" + getLocalName());
     }
 
 
@@ -135,21 +136,23 @@ public class LoginActivity extends AppCompatActivity
 
 
     private void initViews() {
-        mLoginBtn = (Button) findViewById(R.id.bt_sign_up);
-        et_name = (EditText) findViewById(R.id.text_account);
-        et_password = (EditText) findViewById(R.id.text_pwd);
-        checkBox_password = (CheckBox) findViewById(R.id.checkBox_pwd);
-        checkBox_login = (CheckBox) findViewById(R.id.checkBox_auto_login);
-        iv_see_password = (ImageView) findViewById(R.id.hide_pwd_image);
-        tv_sign_up = findViewById(R.id.sign_up_entrance);
+        loginButton = (Button) findViewById(R.id.bt_get_pwd);
+        accountText = (EditText) findViewById(R.id.text_account);
+        passwordText = (EditText) findViewById(R.id.text_pwd);
+        passwordCheckBox = (CheckBox) findViewById(R.id.checkBox_pwd);
+        loginCheckBox = (CheckBox) findViewById(R.id.checkBox_auto_login);
+        seePasswordImage = (ImageView) findViewById(R.id.hide_pwd_image);
+        signUpText = findViewById(R.id.sign_up_entrance);
+        forgetPwdText = findViewById(R.id.forget_pwd_text);
     }
 
     private void setupEvents() {
-        mLoginBtn.setOnClickListener(this);
-        checkBox_password.setOnCheckedChangeListener(this);
-        checkBox_login.setOnCheckedChangeListener(this);
-        iv_see_password.setOnClickListener(this);
-        tv_sign_up.setOnClickListener(this);
+        loginButton.setOnClickListener(this);
+        passwordCheckBox.setOnCheckedChangeListener(this);
+        loginCheckBox.setOnCheckedChangeListener(this);
+        seePasswordImage.setOnClickListener(this);
+        signUpText.setOnClickListener(this);
+        forgetPwdText.setOnClickListener(this);
 
     }
 
@@ -175,7 +178,7 @@ public class LoginActivity extends AppCompatActivity
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.bt_sign_up:
+            case R.id.bt_get_pwd:
                 loadUserName();    //无论如何保存一下用户名
                 login(); //登陆
                 break;
@@ -184,6 +187,11 @@ public class LoginActivity extends AppCompatActivity
                 break;
             case R.id.sign_up_entrance:
                 startActivity(new Intent(LoginActivity.this,SignUpActivity.class));
+                break;
+            case R.id.forget_pwd_text:
+                startActivity(new Intent(LoginActivity.this,ForgetPwdActivity.class));
+                break;
+            default:
                 break;
         }
     }
@@ -257,15 +265,15 @@ public class LoginActivity extends AppCompatActivity
      * 设置密码可见和不可见的相互转换
      */
     private void setPasswordVisibility() {
-        if (iv_see_password.isSelected()) {
-            iv_see_password.setSelected(false);
+        if (seePasswordImage.isSelected()) {
+            seePasswordImage.setSelected(false);
             //密码不可见
-            et_password.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+            passwordText.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
 
         } else {
-            iv_see_password.setSelected(true);
+            seePasswordImage.setSelected(true);
             //密码可见
-            et_password.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+            passwordText.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
         }
 
     }
@@ -274,14 +282,14 @@ public class LoginActivity extends AppCompatActivity
      * 获取账号
      */
     public String getAccount() {
-        return et_name.getText().toString().trim();//去掉空格
+        return accountText.getText().toString().trim();//去掉空格
     }
 
     /**
      * 获取密码
      */
     public String getPassword() {
-        return et_password.getText().toString().trim();//去掉空格
+        return passwordText.getText().toString().trim();//去掉空格
     }
 
 
@@ -289,7 +297,7 @@ public class LoginActivity extends AppCompatActivity
      * 保存用户选择“记住密码”和“自动登陆”的状态
      */
     private void loadCheckBoxState() {
-        loadCheckBoxState(checkBox_password, checkBox_login);
+        loadCheckBoxState(passwordCheckBox, loginCheckBox);
     }
 
     /**
@@ -329,7 +337,7 @@ public class LoginActivity extends AppCompatActivity
      * @param clickable
      */
     public void setLoginBtnClickable(boolean clickable) {
-        mLoginBtn.setClickable(clickable);
+        loginButton.setClickable(clickable);
     }
 
 
@@ -367,13 +375,13 @@ public class LoginActivity extends AppCompatActivity
      * @param isChecked  按钮的状态
      */
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-        if (buttonView == checkBox_password) {  //记住密码选框发生改变时
+        if (buttonView == passwordCheckBox) {  //记住密码选框发生改变时
             if (!isChecked) {   //如果取消“记住密码”，那么同样取消自动登陆
-                checkBox_login.setChecked(false);
+                loginCheckBox.setChecked(false);
             }
-        } else if (buttonView == checkBox_login) {   //自动登陆选框发生改变时
+        } else if (buttonView == loginCheckBox) {   //自动登陆选框发生改变时
             if (isChecked) {   //如果选择“自动登录”，那么同样选中“记住密码”
-                checkBox_password.setChecked(true);
+                passwordCheckBox.setChecked(true);
             }
         }
     }

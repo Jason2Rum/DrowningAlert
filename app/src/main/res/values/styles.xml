@@ -8,7 +8,12 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>
+    <style name="NoBar" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/royalblue</item>
+        <item name="colorPrimaryDark">@color/royalblue</item>
+        <item name="colorAccent">@color/royalblue</item>
 
+    </style>
     <!--加载对话窗-->
 
     <style name="BaseDialog" parent="@android:style/Theme.Dialog"/>
