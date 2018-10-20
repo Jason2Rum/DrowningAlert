@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/post_profile"
+        android:layout_marginLeft="20dp"
+        android:layout_width="50dp"
+        android:src="@drawable/profile"
+        android:layout_height="50dp" />
+    <TextView
+        android:id="@+id/post_nickname"
+        android:layout_width="100dp"
+        android:layout_height="25dp"
+        android:textSize="13dp"
+        android:text="匿名用户"
+        android:gravity="center_vertical"
+        android:layout_marginLeft="15dp"
+        android:layout_toEndOf="@id/post_profile"/>
+    <TextView
+        android:id="@+id/post_issue_time"
+        android:layout_width="100dp"
+        android:text="2018-10-01 13:55:44"
+        android:textSize="13dp"
+        android:gravity="center_vertical"
+        android:layout_height="15dp"
+        android:layout_below="@id/post_nickname"
+        android:layout_alignLeft="@id/post_nickname"/>
+
+    <TextView
+        android:id="@+id/post_content"
+        android:layout_width="280dp"
+        android:text="在众多的社交类软件中，朋友圈是必不可少的，可以与好友、同学等分享自己的日常和有意思的事情，在开发社交类App时，朋友圈发表的内容你不可能让他全部显示，全部显示的话用户体验度会非常不好"
+        android:layout_height="wrap_content"
+        android:minHeight="30dp"
+        android:layout_alignLeft="@id/post_issue_time"
+        android:layout_marginTop="5dp"
+        android:layout_below="@id/post_issue_time"/>
+    <ImageView
+        android:id="@+id/post_comment"
+        android:layout_alignEnd="@id/post_content"
+        android:layout_below="@id/post_content"
+        android:layout_width="20dp"
+        android:src="@drawable/icon_post_comment"
+        android:layout_marginEnd="20dp"
+        android:layout_height="20dp" />
+
+    <ImageView
+        android:id="@+id/post_interest"
+        android:background="@drawable/icon_thumb_selector"
+        android:layout_toLeftOf="@id/post_interest_count"
+        android:layout_below="@id/post_content"
+        android:layout_width="20dp"
+        android:layout_height="20dp" />
+    <TextView
+        android:id="@+id/post_interest_count"
+        android:layout_marginRight="20dp"
+        android:layout_toLeftOf="@id/post_comment"
+        android:layout_below="@id/post_content"
+        android:layout_width="30dp"
+        android:text="50"
+        android:gravity="center_vertical"
+        android:textSize="15dp"
+        android:layout_height="20dp" />
+
+
+
+
+
+
+</RelativeLayout>

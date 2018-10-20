@@ -35,7 +35,7 @@ public class LoginActivity extends AppCompatActivity
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                accountText.setText("hh");
+
                 Toast.makeText(LoginActivity.this, msg, Toast.LENGTH_SHORT).show();
             }
         });
@@ -109,8 +109,8 @@ public class LoginActivity extends AppCompatActivity
         //获取SharedPreferences对象，使用自定义类的方法来获取对象
         SharedPreferencesUtil helper = new SharedPreferencesUtil(this, "setting");
         String password = helper.getString("password");
-        return password;   //解码一下
-//       return password;   //解码一下
+        return password;
+
 
     }
 
@@ -221,7 +221,6 @@ public class LoginActivity extends AppCompatActivity
                 super.run();
                 setLoginBtnClickable(false);//点击登录后，设置登录按钮不可点击状态
 
-
                 //睡眠3秒
                 try {
                     Thread.sleep(3000);
@@ -234,7 +233,7 @@ public class LoginActivity extends AppCompatActivity
                     showToast("登录成功");
                     loadCheckBoxState();//记录下当前用户记住密码和自动登录的状态;
 
-                    startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                    startActivity(new Intent(LoginActivity.this, MainActivity.class).putExtra("account",getAccount()));
                     finish();//关闭页面
                 } else {
                     showToast("输入的登录账号或密码不正确");
@@ -414,8 +413,4 @@ public class LoginActivity extends AppCompatActivity
         }
         super.onDestroy();
     }
-
-
-
-
 }
