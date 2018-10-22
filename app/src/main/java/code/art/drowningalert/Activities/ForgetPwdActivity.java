@@ -1,6 +1,5 @@
-package code.art.drowningalert;
+package code.art.drowningalert.Activities;
 
-import android.accounts.Account;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
@@ -13,6 +12,7 @@ import android.widget.Toast;
 
 import java.io.IOException;
 
+import code.art.drowningalert.R;
 import code.art.drowningalert.widgets.LoadingDialog;
 import okhttp3.FormBody;
 import okhttp3.OkHttpClient;

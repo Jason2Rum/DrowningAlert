@@ -1,4 +1,4 @@
-package code.art.drowningalert;
+package code.art.drowningalert.Activities;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import code.art.drowningalert.R;
 import code.art.drowningalert.Utils.SharedPreferencesUtil;
 import code.art.drowningalert.widgets.LoadingDialog;
 

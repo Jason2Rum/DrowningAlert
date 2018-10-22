@@ -1,4 +1,4 @@
-package code.art.drowningalert;
+package code.art.drowningalert.Activities;
 
 import android.Manifest;
 import android.content.ComponentName;
@@ -27,7 +27,12 @@ import org.json.JSONArray;
 import java.util.ArrayList;
 import java.util.List;
 
+import code.art.drowningalert.Fragments.LocationFragment;
+import code.art.drowningalert.Fragments.MineFragment;
+import code.art.drowningalert.R;
+import code.art.drowningalert.Fragments.RcmdFragment;
 import code.art.drowningalert.Service.PollingService;
+import code.art.drowningalert.Fragments.ZoneFragment;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -133,7 +138,9 @@ public class MainActivity extends AppCompatActivity {
         .addItem(new BottomNavigationItem(R.drawable.icon_location_click,"监察")
                 .setInactiveIcon(ContextCompat.getDrawable(MainActivity.this,R.drawable.icon_location)))
         .addItem(new BottomNavigationItem(R.drawable.icon_zone_click,"圈子")
-                .setInactiveIcon(ContextCompat.getDrawable(MainActivity.this,R.drawable.icon_zone)));
+                .setInactiveIcon(ContextCompat.getDrawable(MainActivity.this,R.drawable.icon_zone)))
+        .addItem(new BottomNavigationItem(R.drawable.mine_click,"我的")
+        .setInactiveIcon(ContextCompat.getDrawable(MainActivity.this,R.drawable.mine)));
         bottomNavigationBar.setFirstSelectedPosition(1).initialise();
     }
 
@@ -150,7 +157,7 @@ public class MainActivity extends AppCompatActivity {
                                     if(pollingBinder==null){
                                         Log.d("binder","空的");
                                     }
-                                    replaceFragment(new HomeFragment());
+                                    replaceFragment(new RcmdFragment());
                                     break;
                                 case 1:
                                      locationFragment = new LocationFragment();
@@ -160,6 +167,8 @@ public class MainActivity extends AppCompatActivity {
                                 case 2:
                                     replaceFragment(new ZoneFragment());
                                     break;
+                                case 3:
+                                    replaceFragment(new MineFragment());
                                 default:
                                     break;
                             }

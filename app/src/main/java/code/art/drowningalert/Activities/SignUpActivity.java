@@ -1,4 +1,4 @@
-package code.art.drowningalert;
+package code.art.drowningalert.Activities;
 
 import android.Manifest;
 import android.content.Intent;
@@ -24,6 +24,7 @@ import android.widget.Toast;
 
 import java.io.File;
 
+import code.art.drowningalert.R;
 import code.art.drowningalert.Utils.DensityUtil;
 import code.art.drowningalert.widgets.LoadingDialog;
 import code.art.drowningalert.widgets.PicPopupWindow;
