@@ -40,7 +40,14 @@ public class MainActivity extends AppCompatActivity {
     private int currentTabIndex=1;
     public LocationFragment locationFragment;
     private String account;
+    private String password;
+    private String nickname;
+    private String profileUrl;
+    private String region;
+
     private Intent mIntent;
+
+
 
 
 
@@ -88,15 +95,19 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         SDKInitializer.initialize(getApplicationContext());
         getPermissions();
         setContentView(R.layout.activity_main);
         Intent callerIntent = getIntent();
-        account= callerIntent.getStringExtra("account");//获取上一个活动传来的账户
+        account = callerIntent.getStringExtra("account");//获取上一个活动传来的账户
+        nickname =  callerIntent.getStringExtra("password");
+        profileUrl = callerIntent.getStringExtra("profileUrl");
+
         Log.d("异常检查","login传给mainactivity的account为"+account);
         initViews();
         initEvents();
-         locationFragment = new LocationFragment();
+        locationFragment = new LocationFragment();
         replaceFragment(locationFragment);
 //        startPollingService();
 

@@ -33,7 +33,6 @@ import java.net.URISyntaxException;
 import code.art.drowningalert.R;
 import code.art.drowningalert.SignUpInfo;
 import code.art.drowningalert.Utils.DensityUtil;
-import code.art.drowningalert.Utils.UploadUtil;
 import code.art.drowningalert.widgets.LoadingDialog;
 import code.art.drowningalert.widgets.PicPopupWindow;
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -219,8 +218,14 @@ public class SignUpActivity extends AppCompatActivity implements PicPopupWindow.
                 break;
             case CROP_PHOTO:
                 try{
+
                     Bitmap bitmap = BitmapFactory.decodeStream(getContentResolver().openInputStream(finalProfileUri));
-                    userProfile.setImageBitmap(bitmap);
+                    if(bitmap==null){
+                        userProfile.setImageResource(R.drawable.profile);
+                    }else{
+                        userProfile.setImageBitmap(bitmap);
+                    }
+
                 }catch (Exception e){
                     e.printStackTrace();
                 }
@@ -374,9 +379,9 @@ public class SignUpActivity extends AppCompatActivity implements PicPopupWindow.
             if(result){
                 Toast.makeText(SignUpActivity.this,"注册成功",Toast.LENGTH_SHORT).show();
                 Intent loginIntent = new Intent();
-                loginIntent.putExtra("account",accountText.getText());
-                loginIntent.putExtra("password",pwdText.getText());
-                setResult(LoginActivity.SIGN_UP_REQ_CODE,loginIntent);
+                loginIntent.putExtra("account",accountText.getText().toString());//这里一定要toString，不然前一个活动获取到的参数会是null
+                loginIntent.putExtra("password",pwdText.getText().toString());
+                setResult(RESULT_OK,loginIntent);
                 finish();
             }else {
                 Toast.makeText(SignUpActivity.this,"注册失败",Toast.LENGTH_SHORT).show();
@@ -387,144 +392,6 @@ public class SignUpActivity extends AppCompatActivity implements PicPopupWindow.
     }
 
 
-//    private String getImagePath(Uri uri,String selection){
-//        String path = null;
-//        Cursor cursor = getContentResolver().query(uri,null,selection,null,null);
-//        if(cursor!=null){
-//            if(cursor.moveToFirst()){
-//                path = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA));
-//            }
-//            cursor.close();
-//        }
-//        return path;
-//    }
-//
-//    @NonNull
-//    private Intent cutForPhoto(Uri oriImageUri){
-//        try{
-//            Intent intent = new Intent("com.android.camera.action.CROP");
-//            File cutFile = new File(getExternalCacheDir(),cutOutPutImage);
-//            if(cutFile.exists()){
-//                cutFile.delete();
-//            }
-//            cutFile.createNewFile();
-//
-//            Uri outputImageUri;
-//            if(Build.VERSION.SDK_INT>=24){
-//                outputImageUri = FileProvider.getUriForFile(SignUpActivity.this,fileProvider,cutFile);
-//            }else{
-//                outputImageUri = Uri.fromFile(cutFile);//如果不做判断只调用这一句的话会提示“无法引用经过裁剪的图片”
-//            }
-//            intent.putExtra("crop",true);
-//            intent.putExtra("aspectX",1);
-//            intent.putExtra("aspectY",1);
-//            intent.putExtra("outputX",DensityUtil.dip2px(this,96));
-//            intent.putExtra("outputY",DensityUtil.dip2px(this,96));
-//            intent.putExtra("scale",true);
-//            intent.putExtra("return-data",false);
-//            if(oriImageUri!=null){
-//                intent.setDataAndType(oriImageUri,"image/*");
-//            }if(outputImageUri!=null){
-//                intent.putExtra(MediaStore.EXTRA_OUTPUT,outputImageUri);
-//                imageUri = outputImageUri;//更改成员变量imageUri，也就是将其指向裁剪后的图片，在onActivityResult的CROP_PHOTE分支中要用到
-//            }
-//
-//            intent.putExtra("noFaceDetection",true);
-//            intent.putExtra("outputFormat",Bitmap.CompressFormat.JPEG.toString());
-//            return intent;
-//        }catch (Exception e){
-//            e.printStackTrace();
-//        }
-//        return null;
-//    }
-//    @NonNull
-//    private Intent cutForCamera(String cameraPath,String imageName) {
-//        try {
-//
-//            Intent intent = new Intent("com.android.camera.action.CROP");
-//            //设置裁剪之后的图片路径文件
-//            File cutfile = new File(getExternalCacheDir(),cutOutPutImage); //随便命名一个
-//            if (cutfile.exists()){ //如果已经存在，则先删除,这里应该是上传到服务器，然后再删除本地的，没服务器，只能这样了
-//                cutfile.delete();
-//            }
-//            cutfile.createNewFile();
-//            //初始化 uri
-//            Uri oriImageUri; //拍照得到的图片的uri
-//            Uri outputImageUri ; //真实的 uri
-//            //拍照留下的图片
-//            File filePhotoTaken = new File(cameraPath,imageName);
-//            if (Build.VERSION.SDK_INT >= 24) {
-//                intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-//                oriImageUri = FileProvider.getUriForFile(this,
-//                        fileProvider,
-//                        filePhotoTaken);
-//            } else {
-//                oriImageUri = Uri.fromFile(filePhotoTaken);
-//            }
-//            outputImageUri = Uri.fromFile(cutfile);
-//            //把这个 uri 提供出去，就可以解析成 bitmap了
-//
-//            // crop为true是设置在开启的intent中设置显示的view可以剪裁
-//            intent.putExtra("crop",true);
-//            // aspectX,aspectY 是宽高的比例，这里设置正方形
-//            intent.putExtra("aspectX",1);
-//            intent.putExtra("aspectY",1);
-//            //设置要裁剪的宽高
-//            intent.putExtra("outputX", DensityUtil.dip2px(this,96));
-//            intent.putExtra("outputY",DensityUtil.dip2px(this,96));
-//            intent.putExtra("scale",true);
-//            //如果图片过大，会导致oom，这里设置为false
-//            intent.putExtra("return-data",false);
-//            if (oriImageUri != null) {
-//                intent.setDataAndType(oriImageUri, "image/*");
-//            }
-//            if (outputImageUri != null) {
-//                imageUri = outputImageUri;
-//                intent.putExtra(MediaStore.EXTRA_OUTPUT, outputImageUri);
-//            }
-//            intent.putExtra("noFaceDetection", true);
-//            //压缩图片
-//            intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString());
-//            return intent;
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//        return null;
-//    }
-//    @TargetApi(19)
-//    private void handleImageOnKitKat(Intent data){
-//        String imagePath = null;
-//        Uri uri = data.getData();
-//        if(DocumentsContract.isDocumentUri(this,uri)){
-//            String docId = DocumentsContract.getDocumentId(uri);
-//            if("com.android.providers.media.documents".equals(uri.getAuthority())){
-//                String id = docId.split(":")[1];//shift+空格跳到末尾
-//                String selection = MediaStore.Images.Media._ID+"="+id;
-//                imagePath = getImagePath(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,selection);
-//            }else if("com.android.providers.downloads.documents".equals(uri.getAuthority())){
-//                Uri contentUri = ContentUris.withAppendedId(Uri.parse("content://downloads/public_downloads"),Long.valueOf(docId));
-//                imagePath = getImagePath(contentUri,null);
-//            }
-//        }else if("content".equalsIgnoreCase(uri.getScheme())){
-//            imagePath = getImagePath(uri,null);
-//        }else if("file".equalsIgnoreCase(uri.getScheme())){
-//            imagePath = uri.getPath();
-//        }
-//
-//    }
-//    private void handleImageBeforeKitKat(Intent data){
-//        Uri uri = data.getData();
-//        String imagePath = getImagePath(uri,null);
-//
-//
-//    }
-//    private void displayImage(String imagePath){
-//        if(imagePath!=null){
-//            Bitmap bitmap =BitmapFactory.decodeFile(imagePath);
-//            userProfile.setImageBitmap(bitmap);
-//        }else{
-//            Toast.makeText(this,"failed to get image",Toast.LENGTH_SHORT).show();
-//        }
-//    }
+
 
 }

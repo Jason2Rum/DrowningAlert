@@ -1,10 +1,13 @@
 package code.art.drowningalert.Activities;
 
 import android.content.Intent;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.InputType;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -14,11 +17,22 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
 import code.art.drowningalert.R;
+import code.art.drowningalert.SignUpInfo;
 import code.art.drowningalert.Utils.SharedPreferencesUtil;
 import code.art.drowningalert.widgets.LoadingDialog;
+import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
+import okhttp3.Request;
 import okhttp3.RequestBody;
+import okhttp3.Response;
 
 public class LoginActivity extends AppCompatActivity
         implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
@@ -31,11 +45,34 @@ public class LoginActivity extends AppCompatActivity
     private ImageView seePasswordImage;
     private TextView signUpText;
     private TextView forgetPwdText;
+    private final String LOGIN_URL ="http://120.77.212.58:3000/mobile/login";
 
     public static final int SIGN_UP_REQ_CODE = 1;
+    public static final int LOGIN_SUCCESS=1;
+    public static final int LOGIN_FAIL=2;
 
     private LoadingDialog mLoadingDialog; //显示正在加载的对话框
 
+    private Handler handler =new Handler(){
+        public void handleMessage(Message msg){
+            Map params = (Map)msg.obj;
+            Log.d("测试","handler");
+            switch (msg.what){
+                case LOGIN_SUCCESS:
+                    Intent intent = new Intent(LoginActivity.this,MainActivity.class);
+                    intent.putExtra("account",accountText.getText().toString());
+                    intent.putExtra("password",passwordText.getText().toString());
+                    intent.putExtra("nickname",params.get("nickname").toString());
+                    intent.putExtra("profileUrl",params.get("profileUrl").toString());
+                    intent.putExtra("region",params.get("region").toString());
+                    startActivity(intent);
+                    finish();
+                    break;
+                case LOGIN_FAIL:
+                    showToast("账号或密码错误");
+            }
+        }
+    };
     public void showToast(final String msg) {
 
         runOnUiThread(new Runnable() {
@@ -188,9 +225,8 @@ public class LoginActivity extends AppCompatActivity
         switch (requestCode){
             case SIGN_UP_REQ_CODE:
                 if(resultCode==RESULT_OK){
-
                     accountText.setText(data.getStringExtra("account"));
-                    accountText.setText(data.getStringExtra("password"));
+                    passwordText.setText(data.getStringExtra("password"));
 
                 }
 
@@ -226,8 +262,7 @@ public class LoginActivity extends AppCompatActivity
     }
 
     /**
-     * 模拟登录情况
-     * 用户名csdn，密码123456，就能登录成功，否则登录失败
+     *
      */
     private void login() {
 
@@ -243,49 +278,52 @@ public class LoginActivity extends AppCompatActivity
         }
         //登录一般都是请求服务器来判断密码是否正确，要请求网络，要子线程
         showLoading();//显示加载框
-        Thread loginRunnable = new Thread() {
-
-            @Override
-            public void run() {
-                super.run();
-                setLoginBtnClickable(false);//点击登录后，设置登录按钮不可点击状态
-
-                //睡眠3秒
-                try {
-                    Thread.sleep(500);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-
-
-
-                //判断账号和密码
-                if (getAccount().equals("csdn") && getPassword().equals("123456")) {
-                    showToast("登录成功");
-                    loadCheckBoxState();//记录下当前用户记住密码和自动登录的状态;
-
-                    startActivity(new Intent(LoginActivity.this, MainActivity.class).putExtra("account",getAccount()));
-                    finish();//关闭页面
-                } else {
-                    showToast("输入的登录账号或密码不正确");
-                }
-
-                setLoginBtnClickable(true);  //这里解放登录按钮，设置为可以点击
-                hideLoading();//隐藏加载框
-            }
-        };
-        loginRunnable.start();
-
+        verifyAccount(accountText.getText().toString(),passwordText.getText().toString());
+        hideLoading();
 
     }
-    public void verifyAccount(final String account, String pwd){
+    public void verifyAccount(final String account, final String pwd){
+        setLoginBtnClickable(false);//点击登录后，设置登录按钮不可点击状态
+        Log.d("测试","account:"+account);
+        Log.d("测试","pwd"+pwd);
         new Thread(new Runnable() {
             @Override
             public void run() {
-                OkHttpClient okHttpClient = new OkHttpClient();
+                try{
+                    Log.d("测试","线程");
+                    OkHttpClient okHttpClient = new OkHttpClient();
+                    RequestBody user = new FormBody.Builder()
+                            .add("account",account)
+                            .add("password",pwd)
+                            .build();
 
+                    Request request = new Request.Builder().url(LOGIN_URL).post(user).build();
+                    Response response = okHttpClient.newCall(request).execute();
+                    JSONObject result = new JSONObject(response.body().string());
+
+                    Message msg =new Message();
+                    if(result.getInt("resultcode")==1){
+                        result = result.getJSONArray("data").getJSONObject(0);
+                        msg.what=LOGIN_SUCCESS;
+                        Map<String,String> userInfo =new HashMap<>();
+                        userInfo.put("nickname",result.getString("nickname"));
+                        userInfo.put("region",result.getString("region"));
+                        userInfo.put("profileUrl",result.getString("profileUrl"));
+                        msg.obj = userInfo;
+                    }else {
+                        msg.what=LOGIN_FAIL;
+                    }
+                        handler.sendMessage(msg);
+
+                    Log.d("测试","执行到这一步");
+                    setLoginBtnClickable(true);  //这里解放登录按钮，设置为可以点击
+
+                }catch (Exception e){
+                    Log.d("测试","线程异常");
+                    e.printStackTrace();
+                }
             }
-        }).run();
+        }).start();
     }
 
 
@@ -335,14 +373,14 @@ public class LoginActivity extends AppCompatActivity
     /**
      * 保存用户选择“记住密码”和“自动登陆”的状态
      */
-    private void loadCheckBoxState() {
-        loadCheckBoxState(passwordCheckBox, loginCheckBox);
+    private void saveCheckBoxState() {
+        saveCheckBoxState(passwordCheckBox, loginCheckBox);
     }
 
     /**
      * 保存按钮的状态值
      */
-    public void loadCheckBoxState(CheckBox checkBox_password, CheckBox checkBox_login) {
+    public void saveCheckBoxState(CheckBox checkBox_password, CheckBox checkBox_login) {
 
         //获取SharedPreferences对象，使用自定义类的方法来获取对象
         SharedPreferencesUtil helper = new SharedPreferencesUtil(this, "setting");

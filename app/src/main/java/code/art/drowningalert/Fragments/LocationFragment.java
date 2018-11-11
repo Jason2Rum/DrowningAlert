@@ -4,6 +4,7 @@ import android.app.Service;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -185,26 +186,31 @@ public class LocationFragment extends Fragment {
 
     @Override
     public void onDestroy(){
-        super.onDestroy();
+
         mLocationClient.stop();
-        mapView.onDestroy();
+        Log.d("碎片","onDestroy");
         baiduMap.setMyLocationEnabled(false);
+        mapView.onDestroy();
+        super.onDestroy();
     }
 
     @Override
     public void onResume(){
         super.onResume();
+        Log.d("碎片","onResume");
         mapView.onResume();
     }
     @Override
     public void onPause(){
         super.onPause();
+        Log.d("碎片","onPause");
         myOrientationListener.stop();
         mapView.onPause();
     }
     @Override
     public void onStart(){
         super.onStart();
+        Log.d("碎片","onStart");
         myOrientationListener.start();
     }
 
