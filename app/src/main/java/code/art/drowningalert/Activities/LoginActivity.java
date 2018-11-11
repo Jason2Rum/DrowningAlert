@@ -243,6 +243,7 @@ public class LoginActivity extends AppCompatActivity
                     SharedPreferencesUtil helper = new SharedPreferencesUtil(this, "setting");
                     helper.putValues(new SharedPreferencesUtil.ContentValue("password",getPassword()));
                 }
+                saveCheckBoxState();
                 login(); //登陆
                 break;
             case R.id.hide_pwd_image:
@@ -284,13 +285,11 @@ public class LoginActivity extends AppCompatActivity
     }
     public void verifyAccount(final String account, final String pwd){
         setLoginBtnClickable(false);//点击登录后，设置登录按钮不可点击状态
-        Log.d("测试","account:"+account);
-        Log.d("测试","pwd"+pwd);
+
         new Thread(new Runnable() {
             @Override
             public void run() {
                 try{
-                    Log.d("测试","线程");
                     OkHttpClient okHttpClient = new OkHttpClient();
                     RequestBody user = new FormBody.Builder()
                             .add("account",account)
@@ -315,15 +314,14 @@ public class LoginActivity extends AppCompatActivity
                     }
                         handler.sendMessage(msg);
 
-                    Log.d("测试","执行到这一步");
                     setLoginBtnClickable(true);  //这里解放登录按钮，设置为可以点击
 
                 }catch (Exception e){
-                    Log.d("测试","线程异常");
                     e.printStackTrace();
                 }
             }
         }).start();
+
     }
 
 

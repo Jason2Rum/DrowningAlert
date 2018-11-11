@@ -33,6 +33,8 @@ import okhttp3.Response;
 
 public class PollingService extends Service {
 
+    private final String POLLING_URL="http://120.77.212.58:3000/mobile/alert";
+
 
 //    private MonitorTask monitorTask;
     private PollingBinder mBinder = new PollingBinder();
@@ -99,10 +101,7 @@ public class PollingService extends Service {
                 try{
                     if(account!=null) Log.d("异常检测","onStartcommand中account"+account);
                     OkHttpClient client = new OkHttpClient();
-                    RequestBody requestBody = new FormBody.Builder()
-                            .add("account",account)
-                            .build();
-                    Request request = new Request.Builder().post(requestBody).url("http://120.77.212.58:8088/alert").build();
+                    Request request = new Request.Builder().get().url(POLLING_URL+"?region=").build();
                     Response response = client.newCall(request).execute();
                     Message message = new Message();
                     message.obj = response;

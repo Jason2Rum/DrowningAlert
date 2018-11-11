@@ -48,9 +48,6 @@ public class MainActivity extends AppCompatActivity {
     private Intent mIntent;
 
 
-
-
-
     List<String> permissionList = new ArrayList<>();
 
     private PollingService.PollingBinder pollingBinder; //一个操纵service的遥控器，在ServiceConnection中的onServiceConnected中实例化
