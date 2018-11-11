@@ -81,7 +81,7 @@ public class PollingService extends Service {
         PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
                 new Intent(this, MainActivity.class), 0);
         builder.setContentIntent(contentIntent);
-        builder.setSmallIcon(R.drawable.icon_buoy);
+        builder.setSmallIcon(R.mipmap.icon_buoy);
         builder.setTicker("Foreground Service Start");
         builder.setContentTitle("正在监听...");
         builder.setAutoCancel(false);

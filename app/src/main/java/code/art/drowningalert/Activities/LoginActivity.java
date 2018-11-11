@@ -1,6 +1,7 @@
 package code.art.drowningalert.Activities;
 
 import android.content.Intent;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.InputType;
@@ -16,6 +17,8 @@ import android.widget.Toast;
 import code.art.drowningalert.R;
 import code.art.drowningalert.Utils.SharedPreferencesUtil;
 import code.art.drowningalert.widgets.LoadingDialog;
+import okhttp3.OkHttpClient;
+import okhttp3.RequestBody;
 
 public class LoginActivity extends AppCompatActivity
         implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
@@ -28,6 +31,8 @@ public class LoginActivity extends AppCompatActivity
     private ImageView seePasswordImage;
     private TextView signUpText;
     private TextView forgetPwdText;
+
+    public static final int SIGN_UP_REQ_CODE = 1;
 
     private LoadingDialog mLoadingDialog; //显示正在加载的对话框
 
@@ -52,6 +57,8 @@ public class LoginActivity extends AppCompatActivity
 
     }
 
+
+
     private void initData() {
 
 
@@ -61,7 +68,7 @@ public class LoginActivity extends AppCompatActivity
             loginCheckBox.setChecked(false);//取消自动登录的复选框
         }
         //判断是否记住密码
-        if (remenberPassword()) {
+        if (rememberPassword()) {
             passwordCheckBox.setChecked(true);//勾选记住密码
             setTextNameAndPassword();//把密码和账号输入到输入框中
         } else {
@@ -128,16 +135,16 @@ public class LoginActivity extends AppCompatActivity
     /**
      * 判断是否记住密码
      */
-    private boolean remenberPassword() {
+    private boolean rememberPassword() {
         //获取SharedPreferences对象，使用自定义类的方法来获取对象
         SharedPreferencesUtil helper = new SharedPreferencesUtil(this, "setting");
-        boolean remenberPassword = helper.getBoolean("remenberPassword", false);
-        return remenberPassword;
+        boolean rememberPwd = helper.getBoolean("rememberPassword", false);
+        return rememberPwd;
     }
 
 
     private void initViews() {
-        loginButton = (Button) findViewById(R.id.bt_get_pwd);
+        loginButton = (Button) findViewById(R.id.btn_login);
         accountText = (EditText) findViewById(R.id.text_account);
         passwordText = (EditText) findViewById(R.id.text_pwd);
         passwordCheckBox = (CheckBox) findViewById(R.id.checkBox_pwd);
@@ -167,7 +174,7 @@ public class LoginActivity extends AppCompatActivity
         if (first) {
             //创建一个ContentVa对象（自定义的）设置不是第一次登录，,并创建记住密码和自动登录是默认不选，创建账号和密码为空
             helper.putValues(new SharedPreferencesUtil.ContentValue("first", false),
-                    new SharedPreferencesUtil.ContentValue("remenberPassword", false),
+                    new SharedPreferencesUtil.ContentValue("rememberPassword", false),
                     new SharedPreferencesUtil.ContentValue("autoLogin", false),
                     new SharedPreferencesUtil.ContentValue("name", ""),
                     new SharedPreferencesUtil.ContentValue("password", ""));
@@ -177,20 +184,41 @@ public class LoginActivity extends AppCompatActivity
     }
 
     @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        switch (requestCode){
+            case SIGN_UP_REQ_CODE:
+                if(resultCode==RESULT_OK){
+
+                    accountText.setText(data.getStringExtra("account"));
+                    accountText.setText(data.getStringExtra("password"));
+
+                }
+
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.bt_get_pwd:
-                loadUserName();    //无论如何保存一下用户名
+            case R.id.btn_login:
+                saveAccount();    //无论如何保存一下用户名
+                if(rememberPassword()){
+                    SharedPreferencesUtil helper = new SharedPreferencesUtil(this, "setting");
+                    helper.putValues(new SharedPreferencesUtil.ContentValue("password",getPassword()));
+                }
                 login(); //登陆
                 break;
             case R.id.hide_pwd_image:
                 setPasswordVisibility();    //改变图片并设置输入框的文本可见或不可见
                 break;
             case R.id.sign_up_entrance:
-                startActivity(new Intent(LoginActivity.this,SignUpActivity.class));
+                startActivityForResult(new Intent(LoginActivity.this,SignUpActivity.class), SIGN_UP_REQ_CODE);
+
                 break;
             case R.id.forget_pwd_text:
                 startActivity(new Intent(LoginActivity.this,ForgetPwdActivity.class));
+
                 break;
             default:
                 break;
@@ -224,10 +252,12 @@ public class LoginActivity extends AppCompatActivity
 
                 //睡眠3秒
                 try {
-                    Thread.sleep(3000);
+                    Thread.sleep(500);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
+
+
 
                 //判断账号和密码
                 if (getAccount().equals("csdn") && getPassword().equals("123456")) {
@@ -248,12 +278,21 @@ public class LoginActivity extends AppCompatActivity
 
 
     }
+    public void verifyAccount(final String account, String pwd){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                OkHttpClient okHttpClient = new OkHttpClient();
+
+            }
+        }).run();
+    }
 
 
     /**
      * 保存用户账号
      */
-    public void loadUserName() {
+    public void saveAccount() {
         if (!getAccount().equals("") || !getAccount().equals("请输入登录账号")) {
             SharedPreferencesUtil helper = new SharedPreferencesUtil(this, "setting");
             helper.putValues(new SharedPreferencesUtil.ContentValue("name", getAccount()));
@@ -312,20 +351,20 @@ public class LoginActivity extends AppCompatActivity
         if (checkBox_login.isChecked()) {
             //创建记住密码和自动登录是都选择,保存密码数据
             helper.putValues(
-                    new SharedPreferencesUtil.ContentValue("remenberPassword", true),
+                    new SharedPreferencesUtil.ContentValue("rememberPassword", true),
                     new SharedPreferencesUtil.ContentValue("autoLogin", true),
                     new SharedPreferencesUtil.ContentValue("password", getPassword()));
 
         } else if (!checkBox_password.isChecked()) { //如果没有保存密码，那么自动登录也是不选的
             //创建记住密码和自动登录是默认不选,密码为空
             helper.putValues(
-                    new SharedPreferencesUtil.ContentValue("remenberPassword", false),
+                    new SharedPreferencesUtil.ContentValue("rememberPassword", false),
                     new SharedPreferencesUtil.ContentValue("autoLogin", false),
                     new SharedPreferencesUtil.ContentValue("password", ""));
         } else if (checkBox_password.isChecked()) {   //如果保存密码，没有自动登录
             //创建记住密码为选中和自动登录是默认不选,保存密码数据
             helper.putValues(
-                    new SharedPreferencesUtil.ContentValue("remenberPassword", true),
+                    new SharedPreferencesUtil.ContentValue("rememberPassword", true),
                     new SharedPreferencesUtil.ContentValue("autoLogin", false),
                     new SharedPreferencesUtil.ContentValue("password", getPassword()));
         }

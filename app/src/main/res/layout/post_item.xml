@@ -64,9 +64,4 @@
         android:textSize="15dp"
         android:layout_height="20dp" />
 
-
-
-
-
-
 </RelativeLayout>

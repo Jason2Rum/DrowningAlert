@@ -46,7 +46,7 @@ public class ForgetPwdActivity extends AppCompatActivity {
         scrQuestionText = findViewById(R.id.tv_question);
         accountButton = findViewById(R.id.bt_verify);
         accountText=findViewById(R.id.et_forget_account);
-        passwordButton = findViewById(R.id.bt_get_pwd);
+        passwordButton = findViewById(R.id.btn_login);
     }
     private void initEvent(){
         passwordButton.setOnClickListener(new View.OnClickListener() {

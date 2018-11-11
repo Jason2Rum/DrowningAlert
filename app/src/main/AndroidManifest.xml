@@ -38,7 +38,7 @@
             android:exported="true" />
 
         <!--
-        android:names属性指定了这个内容提供器的类名
+        android:name属性指定了这个内容提供器的类名
         android:exported="false" 用来限制其他应用访问你的这个provider，只能为false
         grantUriPermissions表示提供临时读写权限
         -->

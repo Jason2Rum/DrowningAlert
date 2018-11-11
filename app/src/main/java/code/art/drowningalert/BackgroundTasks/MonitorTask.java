@@ -1,4 +1,4 @@
-package code.art.drowningalert;
+package code.art.drowningalert.BackgroundTasks;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;

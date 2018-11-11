@@ -1,10 +1,12 @@
 package code.art.drowningalert.Fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 
@@ -17,6 +19,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import code.art.drowningalert.Activities.RcmdDetailActivity;
 import code.art.drowningalert.R;
 import code.art.drowningalert.Utils.GlideImageLoader;
 
@@ -47,6 +50,12 @@ public class RcmdFragment extends Fragment {
         new int[]{R.id.rec_item_header,R.id.rec_item_title,R.id.rec_item_desc});
         ListView list = view.findViewById(R.id.scenic_spots);
         list.setAdapter(simpleAdapter);
+        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                getActivity().startActivity(new Intent(getActivity(),RcmdDetailActivity.class));
+            }
+        });
         return view;
     }
 
