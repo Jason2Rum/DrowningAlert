@@ -14,12 +14,18 @@ import android.os.Message;
 import android.os.SystemClock;
 import android.util.Log;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import code.art.drowningalert.Activities.MainActivity;
+import code.art.drowningalert.Item.AlertLoc;
 import code.art.drowningalert.R;
-import okhttp3.FormBody;
+import code.art.drowningalert.Utils.LocationParser;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
-import okhttp3.RequestBody;
 import okhttp3.Response;
 
 /**
@@ -38,7 +44,7 @@ public class PollingService extends Service {
 
 //    private MonitorTask monitorTask;
     private PollingBinder mBinder = new PollingBinder();
-    private String account;
+    private String region;
 //    private MonitorTask.MonitorListener listener = new MonitorTask.MonitorListener(){
 //        @Override
 //        public void onDanger(JSONArray j){
@@ -66,8 +72,8 @@ public class PollingService extends Service {
         public void initHandler(Handler h){
             handler = h;
         }
-        public void initAccount(String acc){
-            account = acc;
+        public void initRegion(String acc){
+            region = acc;
         }
 
         public void stopPolling(){
@@ -99,12 +105,25 @@ public class PollingService extends Service {
             @Override
             public void run() {
                 try{
-                    if(account!=null) Log.d("异常检测","onStartcommand中account"+account);
+                    if(region!=null) Log.d("异常检测","onStartcommand中region"+region);
                     OkHttpClient client = new OkHttpClient();
-                    Request request = new Request.Builder().get().url(POLLING_URL+"?region=").build();
+                    Request request = new Request.Builder().get().url(POLLING_URL+"?region="+region).build();
                     Response response = client.newCall(request).execute();
+                    JSONObject result = new JSONObject( response.body().string());
+                    List<AlertLoc> alertLocs = new ArrayList<>();
+                    AlertLoc alertLoc= new AlertLoc();
+                    if(result.getInt("resultcode")==1){
+                        JSONArray locs = result.getJSONArray("data");
+
+                        for(int i=0;i<locs.length();i++){
+                            alertLoc.setUid(locs.getJSONObject(i).getString("uid"));
+                            alertLoc.setLatitude(LocationParser.parse(locs.getJSONObject(i).getString("latitude"),LocationParser.LATITUDE));
+                            alertLoc.setLongitude(LocationParser.parse(locs.getJSONObject(i).getString("longitude"),LocationParser.LONGITUDE));
+                            alertLocs.add(alertLoc);
+                        }
+                    }
                     Message message = new Message();
-                    message.obj = response;
+                    message.obj = alertLocs;
                     handler.sendMessage(message);
                 }catch (Exception e){
                     e.printStackTrace();

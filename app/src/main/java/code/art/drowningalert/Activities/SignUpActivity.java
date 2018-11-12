@@ -33,7 +33,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import code.art.drowningalert.R;
-import code.art.drowningalert.SignUpInfo;
+import code.art.drowningalert.Item.SignUpInfo;
 import code.art.drowningalert.Utils.DensityUtil;
 import code.art.drowningalert.widgets.LoadingDialog;
 import code.art.drowningalert.widgets.PicPopupWindow;
@@ -113,6 +113,7 @@ public class SignUpActivity extends AppCompatActivity implements PicPopupWindow.
                 List<String> regionList = new ArrayList<>();
                 regionList.add("江安");
                 regionList.add("望江");
+                regionList.add("111");
                 SingleOptionsPicker.openOptionsPicker(SignUpActivity.this,regionList,1,regionText);
             }
         });
@@ -371,8 +372,8 @@ public class SignUpActivity extends AppCompatActivity implements PicPopupWindow.
 
 
                 request=new Request.Builder().post(profileImage).url(UPLOAD_PROFILE_URL).build();
-                response = client.newCall(request).execute();
 
+                response = client.newCall(request).execute();
                 responseData = response.body().string();
 
 

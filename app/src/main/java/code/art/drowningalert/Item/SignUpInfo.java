@@ -1,4 +1,4 @@
-package code.art.drowningalert;
+package code.art.drowningalert.Item;
 
 import java.io.File;
 

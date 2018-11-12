@@ -29,15 +29,12 @@ import com.baidu.mapapi.map.OverlayOptions;
 import com.baidu.mapapi.model.LatLng;
 import com.baidu.mapapi.utils.DistanceUtil;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.List;
 
+import code.art.drowningalert.Item.AlertLoc;
 import code.art.drowningalert.MyOrientationListener;
 import code.art.drowningalert.R;
-import code.art.drowningalert.Utils.LocationParser;
 
 public class LocationFragment extends Fragment {
     public LocationClient mLocationClient;
@@ -69,8 +66,6 @@ public class LocationFragment extends Fragment {
         initLocationClientOption(option);
         initEvents();
         mLocationClient.start();
-
-
         return view;
 
 
@@ -131,18 +126,15 @@ public class LocationFragment extends Fragment {
 
     }
 
-    public void setAlertMarker(JSONArray jsonArray ){
+    public void setAlertMarker(List<AlertLoc> locs){
         List<OverlayOptions> options = new ArrayList<OverlayOptions>();
         BitmapDescriptor bitmap = BitmapDescriptorFactory
                 .fromResource(R.drawable.icon_mark);
         List<LatLng> locList = new ArrayList<>();
-        JSONObject jsonObject ;
         try{
-            for(int i= 0;i<jsonArray.length();i++){
-                jsonObject = jsonArray.getJSONObject(i);
-                JSONObject afterParse = new JSONObject(LocationParser.parseLocation(jsonObject.getString("address")));
-                locList.add(new LatLng(Double.parseDouble(afterParse.getString("latitude"))
-                        ,Double.parseDouble(afterParse.getString("longitude"))));
+            for(AlertLoc alertLoc:locs){
+
+                locList.add(new LatLng(alertLoc.getLatitude(),alertLoc.getLongitude()));
                 //手机振动
                 Vibrator mVibrator = (Vibrator)getContext().getSystemService(Service.VIBRATOR_SERVICE);
                 mVibrator.vibrate(new long[]{100,100,100,1000},-1);

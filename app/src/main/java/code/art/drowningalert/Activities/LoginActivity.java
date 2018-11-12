@@ -17,15 +17,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
 import code.art.drowningalert.R;
-import code.art.drowningalert.SignUpInfo;
 import code.art.drowningalert.Utils.SharedPreferencesUtil;
 import code.art.drowningalert.widgets.LoadingDialog;
 import okhttp3.FormBody;

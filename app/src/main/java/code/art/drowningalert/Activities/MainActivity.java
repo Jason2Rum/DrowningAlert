@@ -29,6 +29,7 @@ import java.util.List;
 
 import code.art.drowningalert.Fragments.LocationFragment;
 import code.art.drowningalert.Fragments.MineFragment;
+import code.art.drowningalert.Item.AlertLoc;
 import code.art.drowningalert.R;
 import code.art.drowningalert.Fragments.RcmdFragment;
 import code.art.drowningalert.Service.PollingService;
@@ -57,8 +58,8 @@ public class MainActivity extends AppCompatActivity {
         public void onServiceConnected(ComponentName name, IBinder service) {
             pollingBinder = (PollingService.PollingBinder) service;
             pollingBinder.startPolling();
-            if(account!=null)Log.d("空检测",account);
-            pollingBinder.initAccount(account);
+            if(account!=null)Log.d("空检测",region);
+            pollingBinder.initRegion(region);
             if(handler!=null)
             Log.d("空检测","handler不空");
             pollingBinder.initHandler(handler);
@@ -77,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
         public void handleMessage(Message msg){
             try{
                 if(locationFragment!=null){
-                    locationFragment.setAlertMarker(new JSONArray(msg.obj.toString()));
+                    locationFragment.setAlertMarker((List<AlertLoc>)msg.obj);
                 }
             }catch (Exception e){
                 e.printStackTrace();
@@ -100,11 +101,14 @@ public class MainActivity extends AppCompatActivity {
         account = callerIntent.getStringExtra("account");//获取上一个活动传来的账户
         nickname =  callerIntent.getStringExtra("password");
         profileUrl = callerIntent.getStringExtra("profileUrl");
+        region = callerIntent.getStringExtra("region");
 
-        Log.d("异常检查","login传给mainactivity的account为"+account);
+
+
         initViews();
         initEvents();
         locationFragment = new LocationFragment();
+
         replaceFragment(locationFragment);
 //        startPollingService();
 
@@ -228,6 +232,5 @@ public class MainActivity extends AppCompatActivity {
         super.onDestroy();
         unbindService(connection);
     }
-
 
 }
