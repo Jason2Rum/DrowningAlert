@@ -29,12 +29,15 @@ import org.json.JSONObject;
 import java.io.File;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.List;
 
 import code.art.drowningalert.R;
 import code.art.drowningalert.SignUpInfo;
 import code.art.drowningalert.Utils.DensityUtil;
 import code.art.drowningalert.widgets.LoadingDialog;
 import code.art.drowningalert.widgets.PicPopupWindow;
+import code.art.drowningalert.widgets.SingleOptionsPicker;
 import de.hdodenhof.circleimageview.CircleImageView;
 import okhttp3.FormBody;
 import okhttp3.MediaType;
@@ -102,6 +105,15 @@ public class SignUpActivity extends AppCompatActivity implements PicPopupWindow.
                 mPop.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
                 mPop.setOnItemClickListener(SignUpActivity.this);
                 mPop.showAtLocation(findViewById(R.id.sign_up_layout),Gravity.BOTTOM|Gravity.CENTER_HORIZONTAL,0,0);
+            }
+        });
+        regionText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                List<String> regionList = new ArrayList<>();
+                regionList.add("江安");
+                regionList.add("望江");
+                SingleOptionsPicker.openOptionsPicker(SignUpActivity.this,regionList,1,regionText);
             }
         });
 
