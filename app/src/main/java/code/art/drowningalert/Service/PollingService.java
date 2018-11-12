@@ -40,7 +40,7 @@ import okhttp3.Response;
 public class PollingService extends Service {
 
     private final String POLLING_URL="http://120.77.212.58:3000/mobile/alert";
-
+    public static final int DANGER_FLAG =120;
 
 //    private MonitorTask monitorTask;
     private PollingBinder mBinder = new PollingBinder();
@@ -61,7 +61,7 @@ public class PollingService extends Service {
         return mBinder;
     }
     public class  PollingBinder extends Binder{
-        public void startPolling(){
+        public void setupForeground(){
             startForeground(1,getNotification());
 //            if(monitorTask==null){
 //                monitorTask = new MonitorTask(listener);
@@ -72,8 +72,8 @@ public class PollingService extends Service {
         public void initHandler(Handler h){
             handler = h;
         }
-        public void initRegion(String acc){
-            region = acc;
+        public void initRegion(String reg){
+            region = reg;
         }
 
         public void stopPolling(){
@@ -112,7 +112,9 @@ public class PollingService extends Service {
                     JSONObject result = new JSONObject( response.body().string());
                     List<AlertLoc> alertLocs = new ArrayList<>();
                     AlertLoc alertLoc= new AlertLoc();
+                    Message message = new Message();
                     if(result.getInt("resultcode")==1){
+                        message.what=DANGER_FLAG;
                         JSONArray locs = result.getJSONArray("data");
 
                         for(int i=0;i<locs.length();i++){
@@ -122,7 +124,7 @@ public class PollingService extends Service {
                             alertLocs.add(alertLoc);
                         }
                     }
-                    Message message = new Message();
+
                     message.obj = alertLocs;
                     handler.sendMessage(message);
                 }catch (Exception e){

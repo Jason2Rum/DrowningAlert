@@ -1,6 +1,7 @@
 package code.art.drowningalert.Activities;
 
 import android.Manifest;
+import android.app.Service;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
@@ -8,6 +9,7 @@ import android.content.pm.PackageManager;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
+import android.os.Vibrator;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -15,14 +17,11 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.ashokvarma.bottomnavigation.BottomNavigationBar;
 import com.ashokvarma.bottomnavigation.BottomNavigationItem;
 import com.baidu.mapapi.SDKInitializer;
-
-import org.json.JSONArray;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,11 +34,16 @@ import code.art.drowningalert.Fragments.RcmdFragment;
 import code.art.drowningalert.Service.PollingService;
 import code.art.drowningalert.Fragments.ZoneFragment;
 
+import static com.baidu.mapapi.BMapManager.getContext;
+
 public class MainActivity extends AppCompatActivity {
 
     private BottomNavigationBar bottomNavigationBar;
     private int currentTabIndex=1;
     public LocationFragment locationFragment;
+    public MineFragment mineFragment;
+    public RcmdFragment rcmdFragment;
+    public ZoneFragment zoneFragment;
     private String account;
     private String password;
     private String nickname;
@@ -57,11 +61,8 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             pollingBinder = (PollingService.PollingBinder) service;
-            pollingBinder.startPolling();
-            if(account!=null)Log.d("空检测",region);
+            pollingBinder.setupForeground();
             pollingBinder.initRegion(region);
-            if(handler!=null)
-            Log.d("空检测","handler不空");
             pollingBinder.initHandler(handler);
             startService(mIntent);
 
@@ -77,8 +78,11 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void handleMessage(Message msg){
             try{
-                if(locationFragment!=null){
+                if(locationFragment!=null&&msg.what==PollingService.DANGER_FLAG){
                     locationFragment.setAlertMarker((List<AlertLoc>)msg.obj);
+                    //手机振动
+                    Vibrator mVibrator = (Vibrator)getContext().getSystemService(Service.VIBRATOR_SERVICE);
+                    mVibrator.vibrate(new long[]{100,100,100,1000},-1);
                 }
             }catch (Exception e){
                 e.printStackTrace();
@@ -108,6 +112,9 @@ public class MainActivity extends AppCompatActivity {
         initViews();
         initEvents();
         locationFragment = new LocationFragment();
+        mineFragment = new MineFragment();
+        rcmdFragment = new RcmdFragment();
+        zoneFragment = new ZoneFragment();
 
         replaceFragment(locationFragment);
 //        startPollingService();
@@ -166,21 +173,22 @@ public class MainActivity extends AppCompatActivity {
                         if(currentTabIndex!=position){
                             switch (position){
                                 case 0:
-                                    if(pollingBinder==null){
-                                        Log.d("binder","空的");
-                                    }
-                                    replaceFragment(new RcmdFragment());
+
+                                    replaceFragment(rcmdFragment);
+//                                    replaceFragment(new RcmdFragment());
                                     break;
                                 case 1:
-                                     locationFragment = new LocationFragment();
+//                                     locationFragment = new LocationFragment();
                                     replaceFragment(locationFragment);
 
                                     break;
                                 case 2:
-                                    replaceFragment(new ZoneFragment());
+                                    replaceFragment(zoneFragment);
+//                                    replaceFragment(new ZoneFragment());
                                     break;
                                 case 3:
-                                    replaceFragment(new MineFragment());
+                                    replaceFragment(mineFragment);
+//                                    replaceFragment(new MineFragment());
                                 default:
                                     break;
                             }

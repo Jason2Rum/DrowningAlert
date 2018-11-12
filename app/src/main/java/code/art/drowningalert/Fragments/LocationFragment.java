@@ -39,13 +39,14 @@ import code.art.drowningalert.R;
 public class LocationFragment extends Fragment {
     public LocationClient mLocationClient;
     private LocationClientOption option;
-    private boolean isFirstLocate = true;
+    private int isFirstLocate = 0;
     private BaiduMap baiduMap;
     private MapView mapView;
     private LatLng myPos;
     private MyOrientationListener myOrientationListener;
     private BitmapDescriptor bitmapDescriptor;
     private float mLastX;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
@@ -105,14 +106,16 @@ public class LocationFragment extends Fragment {
     //移动到我的位置，并让“我”显示在地图上
     private void navigateTo(BDLocation location){
 
+
         LatLng ll = new LatLng(location.getLatitude(),location.getLongitude());
         myPos = ll;//获取我的位置坐标
-        MapStatusUpdate update = MapStatusUpdateFactory.newLatLng(ll);
-        baiduMap.animateMapStatus(update);
-        if(isFirstLocate){
+
+        if(isFirstLocate<3){
+            MapStatusUpdate update = MapStatusUpdateFactory.newLatLng(ll);
+            baiduMap.animateMapStatus(update);
             update = MapStatusUpdateFactory.newLatLngZoom(ll,18f);
             baiduMap.animateMapStatus(update);
-            isFirstLocate = false;
+            isFirstLocate ++;
         }
         MyLocationData.Builder locationBuilder = new MyLocationData.Builder();
         locationBuilder.latitude(location.getLatitude());
@@ -135,9 +138,8 @@ public class LocationFragment extends Fragment {
             for(AlertLoc alertLoc:locs){
 
                 locList.add(new LatLng(alertLoc.getLatitude(),alertLoc.getLongitude()));
-                //手机振动
-                Vibrator mVibrator = (Vibrator)getContext().getSystemService(Service.VIBRATOR_SERVICE);
-                mVibrator.vibrate(new long[]{100,100,100,1000},-1);
+
+
             }
         }catch(Exception e){
             e.printStackTrace();

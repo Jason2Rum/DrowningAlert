@@ -53,7 +53,6 @@ public class LoginActivity extends AppCompatActivity
     private Handler handler =new Handler(){
         public void handleMessage(Message msg){
             Map params = (Map)msg.obj;
-            Log.d("测试","handler");
             switch (msg.what){
                 case LOGIN_SUCCESS:
                     Intent intent = new Intent(LoginActivity.this,MainActivity.class);
