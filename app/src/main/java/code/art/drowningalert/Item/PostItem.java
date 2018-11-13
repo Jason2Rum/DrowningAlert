@@ -5,14 +5,14 @@ import android.graphics.drawable.Drawable;
 public class PostItem {
     private String name;
     private String postTime;
-    private int profile;
+    private String profile;
     private String content;
 
-    public int getProfile() {
+    public String getProfile() {
         return profile;
     }
 
-    public void setProfile(int profile) {
+    public void setProfile(String profile) {
         this.profile = profile;
     }
 

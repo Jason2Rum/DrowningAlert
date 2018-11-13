@@ -26,6 +26,7 @@
         android:background="@drawable/shape_rectangle"
         android:hint="请输入..." />
     <Button
+        android:id="@+id/btn_post"
         android:background="@drawable/btn_blue_selector"
         android:layout_alignRight="@+id/input_post_content"
         android:layout_below="@id/input_post_content"

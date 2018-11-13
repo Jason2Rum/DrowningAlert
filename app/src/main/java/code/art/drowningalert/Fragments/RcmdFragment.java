@@ -62,21 +62,21 @@ public class RcmdFragment extends Fragment {
     public void initBanner(View view){
         banner = (Banner)view.findViewById(R.id.home_banner);
         banner.setImageLoader(new GlideImageLoader());
-        list_path_imgs.add("http://a.bbkz.net/forum/gallery/images/309498/large/1_fotto1_1189.JPG");
-        list_path_imgs.add("http://www.qqkj.cn/files/beyondpic/2012-6/8/126811182513706.jpg");
-        list_path_imgs.add("http://www.qqkj.cn/files/beyondpic/2012-6/8/126811182538135.jpg");
+        list_path_imgs.add("http://goss2.vcg.com/creative/vcg/800/version23/VCG41172243587.jpg");
+        list_path_imgs.add("http://5b0988e595225.cdn.sohucs.com/images/20180715/31d0df4e56f84524ad6088f80ba1f357.jpeg");
+        list_path_imgs.add("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1542106119028&di=ba85d78dfcec33b8aacb0f7de9b6da02&imgtype=0&src=http%3A%2F%2Fimgsrc.baidu.com%2Fimgad%2Fpic%2Fitem%2F1e30e924b899a9015bc5951b16950a7b0208f52f.jpg");
 //        list_path_imgs.add("http://120.77.212.58:8080/picTest/book.jpg");
         list_title.add("关于溺水你所不知道的事");
-        list_title.add("90后情绪多变？");
-        list_title.add("你不知道的危险疾病");
+        list_title.add("如何识别溺水者");
+        list_title.add("如何救援溺水者");
 //        list_title.add("你与开心只差一步之遥");
         banner.setBannerStyle(BannerConfig.CIRCLE_INDICATOR_TITLE);
-        banner.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-            }
-        });
+//        banner.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//
+//            }
+//        });
         banner.setImages(list_path_imgs);
         banner.setOnBannerListener(new OnBannerListener() {
             @Override
