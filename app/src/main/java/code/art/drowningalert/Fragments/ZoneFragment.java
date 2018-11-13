@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -11,6 +12,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -36,13 +38,17 @@ public class ZoneFragment extends Fragment {
         @Override
         public void handleMessage(Message msg) {
             if(msg.what==1){
-                PostAdapter postAdapter = new PostAdapter(postItems);
+                PostAdapter postAdapter = new PostAdapter(postItems,getActivity());
                 recyclerView.setAdapter(postAdapter);
             }
 
         }
     };
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
@@ -74,6 +80,7 @@ public class ZoneFragment extends Fragment {
 //            postItem.setPostTime("2018-10-02 13:45:12");
 //            postItems.add(postItem);
 //        }
+        postItems = new ArrayList<>();
 
         new Thread(new Runnable() {
             Message message = new Message();
@@ -106,7 +113,7 @@ public class ZoneFragment extends Fragment {
                 handler.sendMessage(message);
 
             }
-        });
+        }).start();
 
 
     }
