@@ -17,6 +17,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.ashokvarma.bottomnavigation.BottomNavigationBar;
@@ -33,6 +34,7 @@ import code.art.drowningalert.R;
 import code.art.drowningalert.Fragments.RcmdFragment;
 import code.art.drowningalert.Service.PollingService;
 import code.art.drowningalert.Fragments.ZoneFragment;
+import code.art.drowningalert.Utils.SharedPreferencesUtil;
 
 import static com.baidu.mapapi.BMapManager.getContext;
 
@@ -102,9 +104,9 @@ public class MainActivity extends AppCompatActivity {
         getPermissions();
         setContentView(R.layout.activity_main);
         Intent callerIntent = getIntent();
-        account = callerIntent.getStringExtra("account");//获取上一个活动传来的账户
-        nickname =  callerIntent.getStringExtra("password");
-        profileUrl = callerIntent.getStringExtra("profileUrl");
+//        account = callerIntent.getStringExtra("account");//获取上一个活动传来的账户
+//        nickname =  callerIntent.getStringExtra("password");
+//        profileUrl = callerIntent.getStringExtra("profileUrl");
         region = callerIntent.getStringExtra("region");
 
 
@@ -117,7 +119,6 @@ public class MainActivity extends AppCompatActivity {
         zoneFragment = new ZoneFragment();
 
         replaceFragment(locationFragment);
-//        startPollingService();
 
         mIntent = new Intent(this, PollingService.class);
         bindService(mIntent,connection,BIND_AUTO_CREATE);

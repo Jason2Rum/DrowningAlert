@@ -20,6 +20,8 @@ import android.view.WindowManager;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+
 import java.io.File;
 
 import code.art.drowningalert.Activities.ChangePwdActivity;
@@ -29,6 +31,7 @@ import code.art.drowningalert.Activities.SignUpActivity;
 import code.art.drowningalert.Activities.UsageDetailActivity;
 import code.art.drowningalert.R;
 import code.art.drowningalert.Utils.DensityUtil;
+import code.art.drowningalert.Utils.SharedPreferencesUtil;
 import code.art.drowningalert.widgets.PicPopupWindow;
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -41,12 +44,13 @@ public class MineFragment extends Fragment implements PicPopupWindow.OnItemClick
     private final String cameraOutputImage="output_image.jpg";
     private final String cutOutPutImage = "cutProfilePic.jpg";
     private final String fileProvider="code.art.drowningalert.fileprovider";
-    private final String SIGN_UP_URL = "http://120.77.212.58";
 
+    private SharedPreferencesUtil spHelper ;
     private PicPopupWindow mPop;
     private CircleImageView userProfile;
     private TextView changePwd;
     private TextView changeScr;
+    private TextView userNickname;
     private TextView aboutPrivacy;
     private TextView aboutUsage;
 
@@ -55,6 +59,7 @@ public class MineFragment extends Fragment implements PicPopupWindow.OnItemClick
         View view = inflater.inflate(R.layout.fragment_mine,container,false);
         initViews(view);
         initEvents(view);
+        initUserData();
         return view;
     }
     private void initViews(View view ){
@@ -63,7 +68,15 @@ public class MineFragment extends Fragment implements PicPopupWindow.OnItemClick
         aboutPrivacy = view.findViewById(R.id.mine_privacy);
         aboutUsage = view.findViewById(R.id.mind_about_usage);
         userProfile = view.findViewById(R.id.mine_profile);
+        userNickname = view.findViewById(R.id.nav_nickname);
     }
+    private void initUserData(){
+        spHelper = new SharedPreferencesUtil(getActivity(),"setting");
+        String profileUrl = spHelper.getString("profileUrl");
+        Glide.with(getActivity()).load(profileUrl).error(R.drawable.profile).into(userProfile);
+        userNickname.setText(spHelper.getString("nickname"));
+    }
+
 
     private void initEvents(final View view){
 
