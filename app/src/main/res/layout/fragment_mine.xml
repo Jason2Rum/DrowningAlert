@@ -73,6 +73,7 @@
         android:layout_width="match_parent"
         android:layout_height="50dp" />
     <Button
+        android:id="@+id/btn_quit"
         android:layout_marginTop="100dp"
         android:gravity="center_horizontal|center_vertical"
         android:layout_below="@id/mind_about_usage"

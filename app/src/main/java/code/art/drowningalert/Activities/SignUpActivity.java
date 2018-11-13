@@ -369,8 +369,6 @@ public class SignUpActivity extends AppCompatActivity implements PicPopupWindow.
                         .addFormDataPart("profile",userInfo.getProfile().getName(),RequestBody.create(MediaType.parse("image/jpg"), userInfo.getProfile()))
                         .build();
 
-
-
                 request=new Request.Builder().post(profileImage).url(UPLOAD_PROFILE_URL).build();
 
                 response = client.newCall(request).execute();

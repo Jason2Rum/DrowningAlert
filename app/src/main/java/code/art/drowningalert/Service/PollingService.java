@@ -105,7 +105,6 @@ public class PollingService extends Service {
             @Override
             public void run() {
                 try{
-                    if(region!=null) Log.d("异常检测","onStartcommand中region"+region);
                     OkHttpClient client = new OkHttpClient();
                     Request request = new Request.Builder().get().url(POLLING_URL+"?region="+region).build();
                     Response response = client.newCall(request).execute();
@@ -114,10 +113,11 @@ public class PollingService extends Service {
                     AlertLoc alertLoc= new AlertLoc();
                     Message message = new Message();
                     if(result.getInt("resultcode")==1){
-                        message.what=DANGER_FLAG;
+
                         JSONArray locs = result.getJSONArray("data");
 
                         for(int i=0;i<locs.length();i++){
+                            message.what=DANGER_FLAG;
                             alertLoc.setUid(locs.getJSONObject(i).getString("uid"));
                             alertLoc.setLatitude(LocationParser.parse(locs.getJSONObject(i).getString("latitude"),LocationParser.LATITUDE));
                             alertLoc.setLongitude(LocationParser.parse(locs.getJSONObject(i).getString("longitude"),LocationParser.LONGITUDE));

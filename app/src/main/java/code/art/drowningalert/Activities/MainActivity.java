@@ -99,6 +99,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d("测试","4:"+Thread.currentThread().getId());
 
         SDKInitializer.initialize(getApplicationContext());
         getPermissions();

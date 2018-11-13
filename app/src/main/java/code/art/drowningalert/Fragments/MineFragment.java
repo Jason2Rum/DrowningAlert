@@ -1,50 +1,66 @@
 package code.art.drowningalert.Fragments;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.PopupWindow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 
+import org.json.JSONObject;
+
 import java.io.File;
+import java.net.URI;
 
 import code.art.drowningalert.Activities.ChangePwdActivity;
 import code.art.drowningalert.Activities.ChangeScrActivity;
+import code.art.drowningalert.Activities.LoginActivity;
 import code.art.drowningalert.Activities.PrivacyActivity;
-import code.art.drowningalert.Activities.SignUpActivity;
 import code.art.drowningalert.Activities.UsageDetailActivity;
 import code.art.drowningalert.R;
 import code.art.drowningalert.Utils.DensityUtil;
 import code.art.drowningalert.Utils.SharedPreferencesUtil;
 import code.art.drowningalert.widgets.PicPopupWindow;
 import de.hdodenhof.circleimageview.CircleImageView;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 public class MineFragment extends Fragment implements PicPopupWindow.OnItemClickListener {
 
-    private Uri imageUri;
+    private Uri finalProfileUri;
     public static final int TAKE_PHOTO=1;
     public static final int CHOOSE_PHOTO=2;
     public static final int CROP_PHOTO =3;
-    private final String cameraOutputImage="output_image.jpg";
-    private final String cutOutPutImage = "cutProfilePic.jpg";
+    private final String photoTakenName ="output_image.jpg";
+    private final String cutImageName = "cutProfilePic.jpg";
     private final String fileProvider="code.art.drowningalert.fileprovider";
-
+    public final String UPLOAD_PROFILE_URL="http://120.77.212.58:3000/mobile/uploadProfile";
     private SharedPreferencesUtil spHelper ;
     private PicPopupWindow mPop;
     private CircleImageView userProfile;
@@ -53,22 +69,43 @@ public class MineFragment extends Fragment implements PicPopupWindow.OnItemClick
     private TextView userNickname;
     private TextView aboutPrivacy;
     private TextView aboutUsage;
+    private Button quitButton;
+
+    public Handler handler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+
+            Log.d("测试","1:"+Thread.currentThread().getId());
+            Log.d("测试","2:"+getActivity().getMainLooper().getThread().getId());
+            Log.d("handler线程3----",handler.getLooper().getThread().getId()+"");
+            if(msg.what==1){
+                Toast.makeText(getActivity(),"注册成功",Toast.LENGTH_SHORT).show();
+            }else{
+                Toast.makeText(getActivity(),"注册失败",Toast.LENGTH_SHORT).show();
+            }
+        }
+    };
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
+        Log.d("测试","3:"+Thread.currentThread().getId());
         View view = inflater.inflate(R.layout.fragment_mine,container,false);
         initViews(view);
         initEvents(view);
         initUserData();
+        Log.d("handler线程：1---",handler.getLooper().getThread().getId()+"");
         return view;
     }
     private void initViews(View view ){
+
         changePwd= view.findViewById(R.id.mine_change_pwd);
         changeScr = view.findViewById(R.id.mine_change_scr);
         aboutPrivacy = view.findViewById(R.id.mine_privacy);
         aboutUsage = view.findViewById(R.id.mind_about_usage);
         userProfile = view.findViewById(R.id.mine_profile);
         userNickname = view.findViewById(R.id.nav_nickname);
+        quitButton = view.findViewById(R.id.btn_quit);
     }
     private void initUserData(){
         spHelper = new SharedPreferencesUtil(getActivity(),"setting");
@@ -114,48 +151,60 @@ public class MineFragment extends Fragment implements PicPopupWindow.OnItemClick
                 getActivity().startActivity(new Intent(getActivity(),UsageDetailActivity.class));
             }
         });
+
+        quitButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                spHelper.putValues(new SharedPreferencesUtil.ContentValue("autoLogin",false));
+                Intent intent =new Intent(getActivity(),LoginActivity.class);
+                startActivity(intent);
+                getActivity().finish();
+            }
+        });
     }
 
-    private Intent cutPhoto(Uri oriImageUri, String cameraPath, String imageName, int flag){
+    private Intent cutPhoto(Uri oriImageUri,String cameraPath,int flag){
         try{
+
             Intent intent = new Intent("com.android.camera.action.CROP");
             Uri outputImageUri;
-            File cutFile = new File(getContext().getExternalCacheDir(),cutOutPutImage);
+            File cutFile = new File(getActivity().getExternalCacheDir(),cutImageName); //裁剪之后的图片file
             if(cutFile.exists()){
                 cutFile.delete();
             }
             cutFile.createNewFile();
             if(flag==CHOOSE_PHOTO){
                 if(Build.VERSION.SDK_INT>=24){
-                    outputImageUri = FileProvider.getUriForFile(getContext(),fileProvider,cutFile);
+                    outputImageUri = FileProvider.getUriForFile(getActivity(),fileProvider,cutFile);
                 }else{
+
                     outputImageUri = Uri.fromFile(cutFile);//如果不做判断只调用这一句的话会提示“无法引用经过裁剪的图片”
                 }
             }else {
-                File filePhotoTaken = new File(cameraPath,imageName);
-                if (Build.VERSION.SDK_INT >= 24) {
+                File filePhotoTaken = new File(cameraPath,photoTakenName);
+                if (Build.VERSION.SDK_INT >= 24) {//安卓7.0
                     intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                    oriImageUri = FileProvider.getUriForFile(getContext(),
-                            fileProvider,
-                            filePhotoTaken);
+                    oriImageUri = FileProvider.getUriForFile(getActivity(),fileProvider,filePhotoTaken);
                 } else {
-                    oriImageUri = Uri.fromFile(filePhotoTaken);
+                    oriImageUri = Uri.fromFile(filePhotoTaken);//oriImageUri指向拍摄的照片
                 }
                 outputImageUri = Uri.fromFile(cutFile);
             }
 
+
+
             intent.putExtra("crop",true);
             intent.putExtra("aspectX",1);
             intent.putExtra("aspectY",1);
-            intent.putExtra("outputX",DensityUtil.dip2px(getContext(),96));
-            intent.putExtra("outputY",DensityUtil.dip2px(getContext(),96));
+            intent.putExtra("outputX",DensityUtil.dip2px(getActivity(),96));
+            intent.putExtra("outputY",DensityUtil.dip2px(getActivity(),96));
             intent.putExtra("scale",true);
             intent.putExtra("return-data",false);
             if(oriImageUri!=null){
                 intent.setDataAndType(oriImageUri,"image/*");
             }if(outputImageUri!=null){
                 intent.putExtra(MediaStore.EXTRA_OUTPUT,outputImageUri);
-                imageUri = outputImageUri;//更改成员变量imageUri，也就是将其指向裁剪后的图片，在onActivityResult的CROP_PHOTE分支中要用到
+                finalProfileUri = outputImageUri;//更改成员变量imageUri，也就是将其指向裁剪后的图片，在onActivityResult的CROP_PHOTE分支中要用到
             }
 
             intent.putExtra("noFaceDetection",true);
@@ -172,24 +221,24 @@ public class MineFragment extends Fragment implements PicPopupWindow.OnItemClick
         switch (v.getId()){
             case R.id.btn_take_photo:
                 mPop.dismiss();
-                File outputImage = new File(getContext().getExternalCacheDir(),cameraOutputImage);//第一个参数为目录的抽象路径名
+                File outputImageFile = new File(getContext().getExternalCacheDir(), photoTakenName);//第一个参数为目录的抽象路径名
 
                 try{
-                    if(outputImage.exists()){
-                        outputImage.delete();
+                    if(outputImageFile.exists()){
+                        outputImageFile.delete();
                     }
-                    outputImage.createNewFile();
+                    outputImageFile.createNewFile();
                 }catch (Exception e){
                     e.printStackTrace();
                 }
                 if(Build.VERSION.SDK_INT>=24){
 
-                    imageUri = FileProvider.getUriForFile(getContext(),fileProvider,outputImage);
+                    finalProfileUri = FileProvider.getUriForFile(getContext(),fileProvider,outputImageFile);
                 }else{
-                    imageUri = Uri.fromFile(outputImage);
+                    finalProfileUri = Uri.fromFile(outputImageFile);
                 }
                 Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
-                intent.putExtra(MediaStore.EXTRA_OUTPUT,imageUri);
+                intent.putExtra(MediaStore.EXTRA_OUTPUT, finalProfileUri);
                 startActivityForResult(intent, TAKE_PHOTO);
                 break;
 
@@ -214,4 +263,72 @@ public class MineFragment extends Fragment implements PicPopupWindow.OnItemClick
         startActivityForResult(intent,CHOOSE_PHOTO);
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data){
+
+        switch (requestCode){
+            case TAKE_PHOTO:
+                if(resultCode == Activity.RESULT_OK){
+                    String path = getActivity().getExternalCacheDir().getPath();
+                    startActivityForResult(cutPhoto(null,path ,TAKE_PHOTO), CROP_PHOTO);
+
+                }
+                break;
+            case CHOOSE_PHOTO:
+                if(resultCode==Activity.RESULT_OK){
+
+                    startActivityForResult(cutPhoto(data.getData(),null,CHOOSE_PHOTO), CROP_PHOTO);
+                }
+                break;
+            case CROP_PHOTO://裁剪完图片后的回调
+                try{
+
+                    Bitmap bitmap = BitmapFactory.decodeStream(getActivity().getContentResolver().openInputStream(finalProfileUri));
+                    if(bitmap==null){
+                        Glide.with(getActivity()).load( spHelper.getString("profileUrl")).error(R.drawable.profile).into(userProfile);
+
+                    }else{
+                        Log.d("handler线程：2----",handler.getLooper().getThread().getId()+"");
+                        userProfile.setImageBitmap(bitmap);
+
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Message message= new Message();
+                                Log.d("测试","5:"+Thread.currentThread().getId());
+                                File profileFile=null;
+                                try{
+                                    profileFile=new File(new URI(finalProfileUri.toString()));
+
+                                    OkHttpClient httpClient = new OkHttpClient();
+                                    MultipartBody profileImage = new MultipartBody.Builder()
+                                            .setType(MultipartBody.FORM)
+                                            .addFormDataPart("account",spHelper.getString("name"))
+                                            .addFormDataPart("profile",profileFile.getName(),RequestBody.create(MediaType.parse("image/jpg"), profileFile))
+                                            .build();
+                                    Request request=new Request.Builder().post(profileImage).url(UPLOAD_PROFILE_URL).build();
+                                    Response response = httpClient.newCall(request).execute();
+                                    String result = response.body().string();
+                                    JSONObject resultObj = new JSONObject(result);
+
+                                    if(resultObj.getInt("resultcode")==1){
+                                        message.what=1;
+                                    }else{
+                                        message.what=0;
+                                    }
+                                }catch (Exception e){
+                                    e.printStackTrace();
+                                    message.what=0;
+                                }
+                                handler.sendMessage(message);
+                            }
+                        }).start();
+                    }
+
+
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+        }
+    }
 }
