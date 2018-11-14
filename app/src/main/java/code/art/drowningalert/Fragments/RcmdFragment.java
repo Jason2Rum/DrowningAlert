@@ -36,9 +36,12 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public class RcmdFragment extends Fragment {
+
+    private String TEST_TAG="RcmdFragment测试: ";
+
     private ArrayList<String> list_path_imgs = new ArrayList<>();
     private ArrayList<String> list_title = new ArrayList<>();
-    List<Map<String,Object>> listItems = new ArrayList<>();
+    List<Map<String,Object>> listItems ;
     Banner banner;
     ListView rcmdList;
     private String[] scenicSpotName;
@@ -94,6 +97,7 @@ public class RcmdFragment extends Fragment {
             }
         });
 
+        Log.d(TEST_TAG, "onCreateView: ");
         initRec();
         return view;
     }
@@ -123,6 +127,7 @@ public class RcmdFragment extends Fragment {
                         descs[i] = obj.getString("content").substring(0, 16) + "...";
                         content[i] = obj.getString("content");
                     }
+                    listItems = new ArrayList<>();
                     for(int i = 0;i<scenicSpotName.length;i++){
                         Map<String,Object> listItem = new HashMap<String,Object>();
                         listItem.put("rec_item_header", imageUrl[i]);
