@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -76,11 +77,9 @@ public class MineFragment extends Fragment implements PicPopupWindow.OnItemClick
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
 
-            Log.d("测试","1:"+Thread.currentThread().getId());
-            Log.d("测试","2:"+getActivity().getMainLooper().getThread().getId());
-            Log.d("handler线程3----",handler.getLooper().getThread().getId()+"");
             if(msg.what==1){
                 Toast.makeText(getActivity(),"注册成功",Toast.LENGTH_SHORT).show();
+
             }else{
                 Toast.makeText(getActivity(),"注册失败",Toast.LENGTH_SHORT).show();
             }
@@ -88,16 +87,54 @@ public class MineFragment extends Fragment implements PicPopupWindow.OnItemClick
     };
 
     @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Log.d("碎片m","oncreate");
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.d("碎片m","onPause");
+    }
+
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
-        Log.d("测试","3:"+Thread.currentThread().getId());
+        Log.d("碎片m", "onCreateView: ");
         View view = inflater.inflate(R.layout.fragment_mine,container,false);
         initViews(view);
         initEvents(view);
         initUserData();
-        Log.d("handler线程：1---",handler.getLooper().getThread().getId()+"");
         return view;
     }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        Log.d("碎片m", "onDestroyView: ");
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.d("碎片m","onStop");
+    }
+
+    @Override
+    public void onStart() {
+        Log.d("碎片m", "onStart: ");
+        super.onStart();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d("碎片m", "onDestroy: ");
+    }
+
     private void initViews(View view ){
+        Log.d("测试", "initViews: ");
 
         changePwd= view.findViewById(R.id.mine_change_pwd);
         changeScr = view.findViewById(R.id.mine_change_scr);
@@ -288,14 +325,12 @@ public class MineFragment extends Fragment implements PicPopupWindow.OnItemClick
                         Glide.with(getActivity()).load( spHelper.getString("profileUrl")).error(R.drawable.profile).into(userProfile);
 
                     }else{
-                        Log.d("handler线程：2----",handler.getLooper().getThread().getId()+"");
-                        userProfile.setImageBitmap(bitmap);
+                       userProfile.setImageBitmap(bitmap);
 
                         new Thread(new Runnable() {
                             @Override
                             public void run() {
                                 Message message= new Message();
-                                Log.d("测试","5:"+Thread.currentThread().getId());
                                 File profileFile=null;
                                 try{
                                     profileFile=new File(new URI(finalProfileUri.toString()));
@@ -310,6 +345,7 @@ public class MineFragment extends Fragment implements PicPopupWindow.OnItemClick
                                     Response response = httpClient.newCall(request).execute();
                                     String result = response.body().string();
                                     JSONObject resultObj = new JSONObject(result);
+                                    spHelper.putValues(new SharedPreferencesUtil.ContentValue("profileUrl",finalProfileUri.toString()));
 
                                     if(resultObj.getInt("resultcode")==1){
                                         message.what=1;

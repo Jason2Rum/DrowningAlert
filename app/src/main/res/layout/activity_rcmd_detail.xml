@@ -8,7 +8,7 @@
 
 
     <TextView
-        android:id="@+id/textView6"
+        android:id="@+id/rcmdContent"
         android:layout_width="319dp"
         android:layout_height="261dp"
         android:layout_marginStart="8dp"
@@ -25,14 +25,14 @@
         app:layout_constraintVertical_bias="0.934" />
 
     <ImageView
-        android:id="@+id/imageView4"
+        android:id="@+id/rcmdImage"
         android:layout_width="226dp"
         android:layout_height="205dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/textView6"
+        app:layout_constraintBottom_toTopOf="@+id/rcmdContent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -40,7 +40,7 @@
         app:srcCompat="@drawable/sydney" />
 
     <TextView
-        android:id="@+id/textView9"
+        android:id="@+id/rcmdTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -48,8 +48,8 @@
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
         android:text="悉尼歌剧院"
-        android:textSize="30dp"
-        app:layout_constraintBottom_toTopOf="@+id/imageView4"
+        android:textSize="25dp"
+        app:layout_constraintBottom_toTopOf="@+id/rcmdImage"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
