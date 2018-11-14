@@ -67,7 +67,8 @@
         <activity android:name=".Activities.ChangeScrActivity" />
         <activity android:name=".Activities.PrivacyActivity" />
         <activity android:name=".Activities.UsageDetailActivity" />
-        <activity android:name=".Activities.RcmdDetailActivity"></activity>
+        <activity android:name=".Activities.RcmdDetailActivity" />
+        <activity android:name=".Activities.BannerDetailActivity"></activity>
     </application>
 
 </manifest>

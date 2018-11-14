@@ -30,7 +30,7 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class ZoneFragment extends Fragment {
-    private List<PostItem> postItems = new ArrayList<>();
+    private List<PostItem> postItems  = new ArrayList<>();
     FloatingActionButton floatingActionButton ;
     RecyclerView recyclerView;
     public static String ZONE_URL="http://120.77.212.58:3000/mobile/zone";
@@ -65,9 +65,15 @@ public class ZoneFragment extends Fragment {
                 getContext().startActivity(new Intent(getActivity(),NewPostActivity.class));
             }
         });
-        initPosts();
+//        initPosts();
         return view;
 }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        initPosts();
+    }
 
     private void initPosts(){
 
@@ -94,8 +100,9 @@ public class ZoneFragment extends Fragment {
                     JSONArray postJsonArray = new JSONObject(result).getJSONArray("data");
                     JSONObject jsonObject;
 
-                    PostItem postItem = new PostItem();
+
                     for(int i=0;i<postJsonArray.length();i++){
+                        PostItem postItem = new PostItem();
                         jsonObject=postJsonArray.getJSONObject(i);
                         postItem.setName(jsonObject.getString("nickname"));
                         postItem.setPostTime(jsonObject.getString("issueTime"));

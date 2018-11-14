@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Activities.BannerDetailActivity">
+
+
+    <TextView
+        android:id="@+id/bnr_detail_content"
+        android:layout_width="319dp"
+        android:layout_height="261dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:text="很多人以为溺水的人会大喊大叫惊慌失措，实际上，很多时候是站立的样子，或者好像在水里垂直爬一个隐形的楼梯。头是大多数在水面上，嘴巴有时候在水外，有时候在水里，一上一下好像冒泡。最最主要的是，身体都是垂直的。如果要真的躺水面上，大家早就知道大事不妙了。溺水的症状因溺水程度而不同。重度的溺水者1分钟内就会出现低血糖症，面色青紫色，双眼充血，瞳孔散大，困睡不醒。若抢救不及时，4-6分钟内即可死亡。必须争分夺秒地进行现场急救，切不可急于送医院而失去宝贵的抢救时机。"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.508"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.934" />
+
+    <ImageView
+        android:id="@+id/bnr_detail_image"
+        android:layout_width="226dp"
+        android:layout_height="205dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="56dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/rcmdContent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0"
+        app:srcCompat="@drawable/bannercontent" />
+
+    <TextView
+        android:id="@+id/bnr_detail_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:text="溺水真正的样子"
+        android:textSize="25dp"
+        app:layout_constraintBottom_toTopOf="@+id/bnr_detail_image"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+</android.support.constraint.ConstraintLayout>

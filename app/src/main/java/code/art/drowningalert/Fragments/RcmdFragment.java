@@ -105,6 +105,12 @@ public class RcmdFragment extends Fragment {
         return view;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+
+    }
+
     public void initRec() {
         new Thread(new Runnable() {
             @Override

@@ -134,7 +134,7 @@ public class PollingService extends Service {
             }
         }).start();
         AlarmManager alarmManager = (AlarmManager)getSystemService(ALARM_SERVICE);
-        int interval = 10;
+        int interval = 2;
         long triggerAtTime = SystemClock.elapsedRealtime()+interval;
         Intent i = new Intent(this,PollingService.class);
         PendingIntent pi = PendingIntent.getService(this,0,i,0);
