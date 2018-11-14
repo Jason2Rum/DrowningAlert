@@ -47,11 +47,14 @@ public class LocationFragment extends Fragment {
     private BitmapDescriptor bitmapDescriptor;
     private float mLastX;
 
+    private String TEST_TAG="LocationFragment";
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
         View view = inflater.inflate(R.layout.fragment_location,container,false);
-
+        isFirstLocate=0;
+        Log.d(TEST_TAG, "onCreateView: ");
 
         mLocationClient = new LocationClient(getContext());
         option = new LocationClientOption();
@@ -68,9 +71,9 @@ public class LocationFragment extends Fragment {
         initEvents();
         mLocationClient.start();
         return view;
-
-
     }
+
+
 
 
     public void initEvents(){
@@ -183,7 +186,6 @@ public class LocationFragment extends Fragment {
 
         mLocationClient.stop();
         Log.d("碎片","onDestroy");
-        baiduMap.setMyLocationEnabled(false);
         mapView.onDestroy();
         super.onDestroy();
     }
@@ -198,14 +200,12 @@ public class LocationFragment extends Fragment {
     public void onPause(){
         super.onPause();
         Log.d("碎片","onPause");
-        myOrientationListener.stop();
         mapView.onPause();
     }
     @Override
     public void onStart(){
         super.onStart();
         Log.d("碎片","onStart");
-        myOrientationListener.start();
     }
 
 }

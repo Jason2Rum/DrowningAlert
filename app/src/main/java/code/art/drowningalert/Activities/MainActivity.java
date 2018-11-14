@@ -110,8 +110,6 @@ public class MainActivity extends AppCompatActivity {
 //        profileUrl = callerIntent.getStringExtra("profileUrl");
         region = callerIntent.getStringExtra("region");
 
-
-
         initViews();
         initEvents();
         locationFragment = new LocationFragment();
