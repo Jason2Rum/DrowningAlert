@@ -54,6 +54,7 @@ import okhttp3.Response;
 
 public class MineFragment extends Fragment implements PicPopupWindow.OnItemClickListener {
 
+    private String MINE_TAG="MineFragment测试: ";
     private Uri finalProfileUri;
     public static final int TAKE_PHOTO=1;
     public static final int CHOOSE_PHOTO=2;
@@ -147,7 +148,10 @@ public class MineFragment extends Fragment implements PicPopupWindow.OnItemClick
     private void initUserData(){
         spHelper = new SharedPreferencesUtil(getActivity(),"setting");
         String profileUrl = spHelper.getString("profileUrl");
+
+        Log.d(MINE_TAG, "initUserData: "+profileUrl);
         Glide.with(getActivity()).load(profileUrl).error(R.drawable.profile).into(userProfile);
+        Log.d(MINE_TAG, "initUserData: 2---");
         userNickname.setText(spHelper.getString("nickname"));
     }
 
@@ -346,7 +350,7 @@ public class MineFragment extends Fragment implements PicPopupWindow.OnItemClick
                                     String result = response.body().string();
                                     JSONObject resultObj = new JSONObject(result);
                                     spHelper.putValues(new SharedPreferencesUtil.ContentValue("profileUrl",finalProfileUri.toString()));
-
+                                    Log.d(MINE_TAG, "run: "+spHelper.getString("profileUrl"));
                                     if(resultObj.getInt("resultcode")==1){
                                         message.what=1;
                                     }else{

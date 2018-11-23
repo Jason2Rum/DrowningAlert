@@ -113,7 +113,6 @@ public class SignUpActivity extends AppCompatActivity implements PicPopupWindow.
                 List<String> regionList = new ArrayList<>();
                 regionList.add("江安");
                 regionList.add("望江");
-                regionList.add("111");
                 SingleOptionsPicker.openOptionsPicker(SignUpActivity.this,regionList,1,regionText);
             }
         });
