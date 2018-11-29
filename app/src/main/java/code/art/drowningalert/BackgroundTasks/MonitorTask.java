@@ -39,7 +39,7 @@ public class MonitorTask extends AsyncTask<String,Integer,JSONArray> {
             RequestBody requestBody = new FormBody.Builder()
                     .add("account",params[0])
                     .build();
-            Request request = new Request.Builder().post(requestBody).url("http://120.77.212.58:8088/alert").build();
+            Request request = new Request.Builder().post(requestBody).url("http://40.73.35.185:300/alert").build();
             Response response = client.newCall(request).execute();
 
             //TODO:提取经纬度返回结果

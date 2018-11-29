@@ -56,8 +56,8 @@ public class SignUpActivity extends AppCompatActivity implements PicPopupWindow.
     private final String photoTakenName="output_image.jpg";  //照相机拍照的图片输出路径
     private final String cutImageName = "cutProfilePic.jpg"; //裁剪后的图片的输出路径
     private final String fileProvider="code.art.drowningalert.fileprovider";
-    private final String SIGN_UP_URL = "http://120.77.212.58:3000/mobile/signup";
-    private final String UPLOAD_PROFILE_URL="http://120.77.212.58:3000/mobile/uploadProfile";
+    private final String SIGN_UP_URL = "http://40.73.35.185:3000/mobile/signup";
+    private final String UPLOAD_PROFILE_URL="http://40.73.35.185:3000/mobile/uploadProfile";
     private PicPopupWindow mPop;
     private CircleImageView userProfile;
     private Uri finalProfileUri;

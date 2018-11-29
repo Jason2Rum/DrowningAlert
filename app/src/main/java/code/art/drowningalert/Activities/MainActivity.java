@@ -80,11 +80,13 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void handleMessage(Message msg){
             try{
-                if(locationFragment!=null&&msg.what==PollingService.DANGER_FLAG){
+                if(locationFragment!=null){
                     locationFragment.setAlertMarker((List<AlertLoc>)msg.obj);
                     //手机振动
-                    Vibrator mVibrator = (Vibrator)getContext().getSystemService(Service.VIBRATOR_SERVICE);
-                    mVibrator.vibrate(new long[]{100,100,100,1000},-1);
+                    if(msg.what==PollingService.DANGER_FLAG){
+                        Vibrator mVibrator = (Vibrator)getContext().getSystemService(Service.VIBRATOR_SERVICE);
+                        mVibrator.vibrate(new long[]{100,100,100,1000},-1);
+                    }
                 }
             }catch (Exception e){
                 e.printStackTrace();

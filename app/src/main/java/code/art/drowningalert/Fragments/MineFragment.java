@@ -62,7 +62,7 @@ public class MineFragment extends Fragment implements PicPopupWindow.OnItemClick
     private final String photoTakenName ="output_image.jpg";
     private final String cutImageName = "cutProfilePic.jpg";
     private final String fileProvider="code.art.drowningalert.fileprovider";
-    public final String UPLOAD_PROFILE_URL="http://120.77.212.58:3000/mobile/uploadProfile";
+    public final String UPLOAD_PROFILE_URL="http://40.73.35.185:3000/mobile/uploadProfile";
     private SharedPreferencesUtil spHelper ;
     private PicPopupWindow mPop;
     private CircleImageView userProfile;

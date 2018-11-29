@@ -4,6 +4,15 @@ public class AlertLoc {
     private String uid;
     private double longitude;//精度
     private double latitude;//纬度
+    private int tag;
+
+    public int getTag() {
+        return tag;
+    }
+
+    public void setTag(int tag) {
+        this.tag = tag;
+    }
 
     public String getUid() {
         return uid;

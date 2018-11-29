@@ -24,10 +24,11 @@ import okhttp3.Response;
 
 public class NewPostActivity extends AppCompatActivity {
 
+
     private EditText contentText;
     private Button postButton;
     private SharedPreferencesUtil spHelper;
-    private static String POST_URL="http://120.77.212.58:3000/mobile/issue";
+    private static String POST_URL="http://40.73.35.185:3000/mobile/issue";
 
     public Handler handler = new Handler(){
         @Override

@@ -133,24 +133,29 @@ public class LocationFragment extends Fragment {
     }
 
     public void setAlertMarker(List<AlertLoc> locs){
+
         List<OverlayOptions> options = new ArrayList<OverlayOptions>();
-        BitmapDescriptor bitmap = BitmapDescriptorFactory
+        BitmapDescriptor iconAlert = BitmapDescriptorFactory
                 .fromResource(R.drawable.icon_mark);
-        List<LatLng> locList = new ArrayList<>();
+        BitmapDescriptor iconNormal = BitmapDescriptorFactory.fromResource(R.drawable.icon_mark_normal);
+        List<LatLng> dangerLocList = new ArrayList<>();
+        List<LatLng> normalLocList = new ArrayList<>();
         try{
             for(AlertLoc alertLoc:locs){
-
-                locList.add(new LatLng(alertLoc.getLatitude(),alertLoc.getLongitude()));
-
+                if(alertLoc.getTag()==1)
+                dangerLocList.add(new LatLng(alertLoc.getLatitude(),alertLoc.getLongitude()));
+                else
+                    normalLocList.add(new LatLng(alertLoc.getLatitude(),alertLoc.getLongitude()));
 
             }
         }catch(Exception e){
             e.printStackTrace();
         }
-        for(int i=0;i<locList.size();i++){
-            OverlayOptions ele =  new MarkerOptions().position(locList.get(i)).icon(bitmap);
-
+        for(int i=0;i<dangerLocList.size();i++){
+            OverlayOptions ele =  new MarkerOptions().position(dangerLocList.get(i)).icon(iconAlert);
+            OverlayOptions nEle = new MarkerOptions().position(normalLocList.get(i)).icon(iconNormal);
             options.add(ele);
+            options.add(nEle);
 
         }
         baiduMap.addOverlays(options);

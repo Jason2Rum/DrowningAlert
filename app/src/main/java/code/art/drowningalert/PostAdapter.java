@@ -24,7 +24,7 @@ import okhttp3.Request;
 public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
     private List<PostItem> mPostItemList;
     private Context mContext;
-    public static final String LIKE_URL="http://120.77.212.58:3000/mobile/like";
+    public static final String LIKE_URL="http://40.73.35.185:3000/mobile/like";
     public PostAdapter (List<PostItem> postItemList, Context context){
         mContext=context;
         mPostItemList = postItemList;

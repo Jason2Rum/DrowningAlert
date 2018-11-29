@@ -39,7 +39,7 @@ import okhttp3.Response;
 
 public class PollingService extends Service {
 
-    private final String POLLING_URL="http://120.77.212.58:3000/mobile/alert";
+    private final String POLLING_URL="http://40.73.35.185:3000/mobile/alert";
     public static final int DANGER_FLAG =120;
 
 //    private MonitorTask monitorTask;
@@ -117,10 +117,13 @@ public class PollingService extends Service {
                         JSONArray locs = result.getJSONArray("data");
 
                         for(int i=0;i<locs.length();i++){
-                            message.what=DANGER_FLAG;
+
                             alertLoc.setUid(locs.getJSONObject(i).getString("uid"));
                             alertLoc.setLatitude(LocationParser.parse(locs.getJSONObject(i).getString("latitude"),LocationParser.LATITUDE));
                             alertLoc.setLongitude(LocationParser.parse(locs.getJSONObject(i).getString("longitude"),LocationParser.LONGITUDE));
+                            alertLoc.setTag(locs.getJSONObject(i).getInt("tag"));
+
+                            if(alertLoc.getTag()==1)message.what=DANGER_FLAG;
                             alertLocs.add(alertLoc);
                         }
                     }
