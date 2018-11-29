@@ -63,11 +63,7 @@ public class PollingService extends Service {
     public class  PollingBinder extends Binder{
         public void setupForeground(){
             startForeground(1,getNotification());
-//            if(monitorTask==null){
-//                monitorTask = new MonitorTask(listener);
-//                monitorTask.execute(account);
-//
-//            }
+
         }
         public void initHandler(Handler h){
             handler = h;
@@ -110,14 +106,14 @@ public class PollingService extends Service {
                     Response response = client.newCall(request).execute();
                     JSONObject result = new JSONObject( response.body().string());
                     List<AlertLoc> alertLocs = new ArrayList<>();
-                    AlertLoc alertLoc= new AlertLoc();
+
                     Message message = new Message();
                     if(result.getInt("resultcode")==1){
 
                         JSONArray locs = result.getJSONArray("data");
 
                         for(int i=0;i<locs.length();i++){
-
+                            AlertLoc alertLoc= new AlertLoc();
                             alertLoc.setUid(locs.getJSONObject(i).getString("uid"));
                             alertLoc.setLatitude(LocationParser.parse(locs.getJSONObject(i).getString("latitude"),LocationParser.LATITUDE));
                             alertLoc.setLongitude(LocationParser.parse(locs.getJSONObject(i).getString("longitude"),LocationParser.LONGITUDE));

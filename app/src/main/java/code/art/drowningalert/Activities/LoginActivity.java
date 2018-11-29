@@ -42,12 +42,12 @@ public class LoginActivity extends AppCompatActivity
     private ImageView seePasswordImage;
     private TextView signUpText;
     private TextView forgetPwdText;
-    private final String LOGIN_URL ="http://120.77.212.58:3000/mobile/login";
-    public static String SERVER ="http://120.77.212.58:3000/";
+    private final String LOGIN_URL ="http://40.73.35.185:3000/mobile/login";
+    public static String SERVER ="http://40.73.35.185:3000/";
 
     public static final int SIGN_UP_REQ_CODE = 1;
     public static final int LOGIN_SUCCESS=1;
-    public static final int LOGIN_FAIL=2;
+    public static final int LOGIN_FAIL=0;
 
     private LoadingDialog mLoadingDialog; //显示正在加载的对话框
 
@@ -56,11 +56,7 @@ public class LoginActivity extends AppCompatActivity
             Map params = (Map)msg.obj;
             switch (msg.what){
                 case LOGIN_SUCCESS:
-                    Intent intent = new Intent(LoginActivity.this,MainActivity.class);
-//                    intent.putExtra("account",accountText.getText().toString());
-//                    intent.putExtra("password",passwordText.getText().toString());
-//                    intent.putExtra("nickname",params.get("nickname").toString());
-//                    intent.putExtra("profileUrl",params.get("profileUrl").toString());
+                    Intent intent = new Intent(LoginActivity.this,MainActivity.class);;
                     intent.putExtra("region",params.get("region").toString());
                     startActivity(intent);
                     finish();
@@ -302,9 +298,7 @@ public class LoginActivity extends AppCompatActivity
                         result = result.getJSONArray("data").getJSONObject(0);
                         msg.what=LOGIN_SUCCESS;
                         Map<String,String> userInfo =new HashMap<>();
-//                        userInfo.put("nickname",result.getString("nickname"));
                         userInfo.put("region",result.getString("region"));
-//                        userInfo.put("profileUrl",result.getString("profileUrl"));
                         SharedPreferencesUtil helper = new SharedPreferencesUtil(LoginActivity.this,"setting");
 
                         helper.putValues(new SharedPreferencesUtil.ContentValue("nickname",result.getString("nickname")),

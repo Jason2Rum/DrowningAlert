@@ -1,7 +1,6 @@
 package code.art.drowningalert.Utils;
 
 
-import java.util.StringTokenizer;
 
 public class LocationParser {
     public static final int LONGITUDE = 0;

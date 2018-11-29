@@ -85,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
                     //手机振动
                     if(msg.what==PollingService.DANGER_FLAG){
                         Vibrator mVibrator = (Vibrator)getContext().getSystemService(Service.VIBRATOR_SERVICE);
-                        mVibrator.vibrate(new long[]{100,100,100,1000},-1);
+                        mVibrator.vibrate(new long[]{100,100,100,2000},-1);
                     }
                 }
             }catch (Exception e){
