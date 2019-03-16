@@ -39,18 +39,11 @@ import okhttp3.Response;
 
 public class PollingService extends Service {
 
-    private final String POLLING_URL="http://40.73.35.185:3000/mobile/alert";
+    private final String POLLING_URL="http://120.77.212.58:3000/mobile/alert";
     public static final int DANGER_FLAG =120;
 
-//    private MonitorTask monitorTask;
     private PollingBinder mBinder = new PollingBinder();
     private String region;
-//    private MonitorTask.MonitorListener listener = new MonitorTask.MonitorListener(){
-//        @Override
-//        public void onDanger(JSONArray j){
-//
-//        }
-//    };
 
     private Handler handler;
 

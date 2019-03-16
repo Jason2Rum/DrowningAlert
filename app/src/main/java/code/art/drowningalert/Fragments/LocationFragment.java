@@ -1,8 +1,7 @@
 package code.art.drowningalert.Fragments;
 
-import android.app.Service;
 import android.os.Bundle;
-import android.os.Vibrator;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -35,6 +34,7 @@ import java.util.List;
 import code.art.drowningalert.Item.AlertLoc;
 import code.art.drowningalert.MyOrientationListener;
 import code.art.drowningalert.R;
+import code.art.drowningalert.Utils.FileUtil;
 
 public class LocationFragment extends Fragment {
     public LocationClient mLocationClient;
@@ -48,13 +48,17 @@ public class LocationFragment extends Fragment {
     private float mLastX;
 
     private String TEST_TAG="LocationFragment";
+    private static String CUSTOM_MAP_STYLE = "custom_config_gray.json";
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
         View view = inflater.inflate(R.layout.fragment_location,container,false);
         isFirstLocate=0;
-        Log.d(TEST_TAG, "onCreateView: ");
 
         mLocationClient = new LocationClient(getContext());
         option = new LocationClientOption();
@@ -151,11 +155,14 @@ public class LocationFragment extends Fragment {
         }catch(Exception e){
             e.printStackTrace();
         }
+        for(int i =0;i<normalLocList.size();i++){
+            OverlayOptions nEle = new MarkerOptions().position(normalLocList.get(i)).icon(iconNormal);
+            options.add(nEle);
+        }
+
         for(int i=0;i<dangerLocList.size();i++){
             OverlayOptions ele =  new MarkerOptions().position(dangerLocList.get(i)).icon(iconAlert);
-            OverlayOptions nEle = new MarkerOptions().position(normalLocList.get(i)).icon(iconNormal);
             options.add(ele);
-            options.add(nEle);
 
         }
         baiduMap.addOverlays(options);

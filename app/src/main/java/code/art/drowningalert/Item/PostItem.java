@@ -1,6 +1,5 @@
 package code.art.drowningalert.Item;
 
-import android.graphics.drawable.Drawable;
 
 public class PostItem {
     private String name;

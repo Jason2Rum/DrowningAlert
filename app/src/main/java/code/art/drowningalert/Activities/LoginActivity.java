@@ -42,8 +42,10 @@ public class LoginActivity extends AppCompatActivity
     private ImageView seePasswordImage;
     private TextView signUpText;
     private TextView forgetPwdText;
-    private final String LOGIN_URL ="http://40.73.35.185:3000/mobile/login";
-    public static String SERVER ="http://40.73.35.185:3000/";
+    private final String LOGIN_URL ="http://120.77.212.58:3000/mobile/login";
+    public static String SERVER ="http://120.77.212.58:3000/";
+
+    private static final String TAG = "LoginActivity";
 
     public static final int SIGN_UP_REQ_CODE = 1;
     public static final int LOGIN_SUCCESS=1;
@@ -59,6 +61,7 @@ public class LoginActivity extends AppCompatActivity
                     Intent intent = new Intent(LoginActivity.this,MainActivity.class);;
                     intent.putExtra("region",params.get("region").toString());
                     startActivity(intent);
+
                     finish();
                     break;
                 case LOGIN_FAIL:
@@ -84,6 +87,8 @@ public class LoginActivity extends AppCompatActivity
         initViews();
         setupEvents();
         initData();
+        accountText.setText("codestorm");
+        passwordText.setText("123456");
 
     }
 

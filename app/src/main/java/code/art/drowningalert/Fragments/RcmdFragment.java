@@ -48,7 +48,7 @@ public class RcmdFragment extends Fragment {
     private String descs[] ;
     private String[] imageUrl;
     private String []content;
-    public static final String RECOMMEND_LIST = "http://40.73.35.185:3000/mobile/recommend";
+    public static final String RECOMMEND_LIST = "http://120.77.212.58:3000/mobile/recommend";
 
     private Handler handler = new Handler(){
         @Override

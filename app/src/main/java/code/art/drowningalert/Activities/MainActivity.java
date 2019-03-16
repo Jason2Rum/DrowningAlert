@@ -120,7 +120,7 @@ public class MainActivity extends AppCompatActivity {
         zoneFragment = new ZoneFragment();
 
         replaceFragment(locationFragment);
-
+//        replaceFragment(rcmdFragment);
         mIntent = new Intent(this, PollingService.class);
         bindService(mIntent,connection,BIND_AUTO_CREATE);
 
@@ -154,7 +154,7 @@ public class MainActivity extends AppCompatActivity {
         bottomNavigationBar.setMode(BottomNavigationBar.MODE_FIXED)
                 .setBackgroundStyle(BottomNavigationBar.BACKGROUND_STYLE_STATIC);
         bottomNavigationBar.setActiveColor(R.color.dodgerblue)
-                .addItem(new BottomNavigationItem(R.drawable.icon_home_click,"首页")
+                .addItem(new BottomNavigationItem(R.drawable.icon_home_click,"推荐")
                         .setInactiveIcon(ContextCompat.getDrawable(MainActivity.this,R.drawable.icon_home)))
         .addItem(new BottomNavigationItem(R.drawable.icon_location_click,"监察")
                 .setInactiveIcon(ContextCompat.getDrawable(MainActivity.this,R.drawable.icon_location)))

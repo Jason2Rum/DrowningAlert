@@ -9,6 +9,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,7 +34,7 @@ public class ZoneFragment extends Fragment {
     private List<PostItem> postItems  = new ArrayList<>();
     FloatingActionButton floatingActionButton ;
     RecyclerView recyclerView;
-    public static String ZONE_URL="http://40.73.35.185:3000/mobile/zone";
+    public static String ZONE_URL="http://120.77.212.58:3000/mobile/zone";
     private Handler handler = new Handler(){
         @Override
         public void handleMessage(Message msg) {
